@@ -1,0 +1,136 @@
+Huge thanks to MasterHowToLearn, who wrote the [original SuperMemoVim](https://github.com/MasterHowToLearn/SuperMemoVim), which this version is based on.
+
+# SuperMemoVim: The keyboard SuperMemo experience
+
+You need AutoHotkey for this. Double click SuperMemoVim.ahk, and you shall see a new icon popping up on your taskbar.
+
+Disclaimer: I have been simultaneously developing and using this script for 1.5 months. Nothing happened to my collection so far, but I can't guarantee it won't happen in the future. Please make sure you have proper backup strategy in place.
+
+# Modes
+
+You can see which mode you are in via the icon in your taskbar.
+
+## Normal mode
+
+For navigating. Press `ctrl` or `esc` to return to normal mode in **all** other modes.
+
+## Insert mode
+
+For text editing. Press `shift` in **all** modes to enter insert mode, and press `i` to enter insert mode in **normal** or **visual** mode.
+
+## Visual mode
+
+For selecting text and editing selected text. Press `v` in **normal** mode to enter visual mode.
+
+## Command mode
+
+For longer scripts. In **normal** mode, press `;` or `:` to enter command mode, press it again to return to normal mode.
+
+# Keystrokes and shortcuts
+
+## Navigation
+
+For both normal and visual mode.
+
+`h`: left
+`j`: down
+`k`: up
+`l`: right
+(`j` and `k`, while in element window and not focused on text, function as `pgdn` and `pgup`)
+`shift+j`: down 5 times (works for content window and browser too)
+`shift+k`: up 5 times
+`0`: go to beginning of line (=`home`)
+`$` (`shift+4`): go to end of line (=`end`)
+`w`: go forward a **w**ord (=`ctrl+right`)
+`b`: go **b**ack a word (=`ctrl+left`)
+`shift+w`: go forward 5 words
+`shift+b`: go back 5 words
+`[`: go to previous paragraph
+`]`: go to next paragraph (=`ctrl+down`)
+`gg` (press `g` twice): **g**o to top (=`ctrl+home`)
+`shift+g`: go to bottom (=`ctrl+end`)
+
+## Normal mode
+
+`x` : delete forward 1 character (=`del`)
+`shift+x` = `backspace`
+`shift+d`: delete everything from caret to end of line
+`shift+p`: delete everything from caret to end of paragraph
+`p`: paste without format
+`yy` (press `y` twice), `shift+y`: yank (copy) current line
+
+`e`: focus to **e**lement window
+`u`: page **u**p
+`d` (while not grading): page **d**own
+`r`: semi-**r**eload  (=`alt+home`->`alt+left`)
+`n`: open hyperlink in current caret position (Open in **n**ew window)
+`m`: set read point (**m**ark)(=`ctrl+f7`)
+`` ` ``: go to read point (=`alt+f7`)
+`shift+m`: clear read point (=`ctrl+shift+f7`)
+`c`: **c**ontent window (=`alt+c`)
+`b` (while not editing text): **b**rowser (=`ctrl+space`)
+
+`alt+shift+j`: previous sibling (=`alt+shift+pgdn`)
+`alt+shift+k`: next sibling (=`alt+shift+pgup`)
+`shift+h`: go back (=`alt+left`)
+`shift+l`: go forward (=`alt+right`)
+`shift+u`: go up (=`ctrl+up`)
+
+`asdfg` (while grading): correspond to 12345, but after grading, learning continues (just like anki)
+
+`o`: add a new line below current paragraph and enter insert mode (time for c**o**mment)
+`shift+o`: add a new line above current and enter insert mode
+`shift+i`: go to beginning of line and enter **i**nsert mode
+`shift+a`: go to end of line and enter insert mode (**a**ppend)
+`shift+s`: delete entire paragraph and enter insert mode at its place (u**s**urp)
+`ctrl+alt+.`: go to end of `[...]` and insert mode
+
+`shift+v`: select entire line and enter visual mode
+`s`: select entire paragraph and enter visual mode
+
+## Insert mode
+
+`ctrl+w`: deleting back a word (=`ctrl+backspace`)
+`ctrl+e`: deleting forward a word (=`ctrl+del`)
+
+## Visual mode
+
+`e`: **e**xtract (=`alt+x`)
+`c`: **c**loze (=`alt+z`)
+`.`: seleted text becomes `[...]`
+`t`: highligh**t**
+`d`, `x`, `shift+x` = backspace
+`y`: copy (**y**ank)(=`ctrl+c`)
+`shift+y`: copy without format
+`p`, `shift+p`: paste
+`shift+d`: cut (=`ctrl+x`)
+`u`: convert to lowercase
+`+u`: convert to uppercase
+`s`: convert to sentence case
+`` ` ``: cycle through cases
+
+## Command mode
+
+`c`: change the default **c**oncept group
+`shift+c`: add new concept
+`b`: delete everything before cursor
+`a`: delete everything after cursor
+`f`: clean format using f6 (keeping tables, clearing fonts and styles)
+`g`: change current element's concept **g**roup
+`l`: link concept
+`w`: prepare wikipedia articles that are not in English
+`i`: learn outstanding **i**tems only
+`r`: set **r**eference's link to what's on clipboard
+
+number pad: priority script by Naess (also works with shift+number, for laptop users)
+
+## Additional hotkeys
+
+Caveat: ctrl+m is remapped to `ctrl+shift+alt+m`, and ctrl+shift+j is remapped to `ctrl+shift+alt+j`.
+
+In Plan window: `alt+a`: insert accident activity
+`ctrl+alt+s`: go to source (works differently for element window / browser)
+
+`ctrl+alt+k`: more intuitive inter-element linking, inspired by obsidian
+first you need to go to the element you want to link to, and press ctrl+alt+shift+k
+and go to the element you want to have the hyperlink, select text and press ctrl+alt+k
