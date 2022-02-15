@@ -2,7 +2,7 @@ Huge thanks to MasterHowToLearn, who wrote the [original SuperMemoVim](https://g
 
 # SuperMemoVim: The keyboard SuperMemo experience
 
-Disclaimer: I have been simultaneously developing and using this script for 1.5 months. Nothing happened to my collection so far, but I can't guarantee the same thing for the future. Please make sure you have proper backup strategy in place.
+Disclaimer: I have been simultaneously developing and using this script for 1 month. Nothing happened to my collection so far, but I can't guarantee the same thing for the future. Please make sure you have proper backup strategy in place.
 
 You need AutoHotkey for this. Double click SuperMemoVim.ahk, and you shall see a new icon popping up on your taskbar.
 
