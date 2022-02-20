@@ -1,7 +1,26 @@
-﻿; FOR NORMAL MODE: ENTER COMMAND MODE
+﻿setPriority(min, max) {
+    send !p
+    Random, OutputVar, %min%, %max%
+    send %OutputVar%
+    send {enter}
+}
+
+setTaskValue(min, max) {
+	send !v
+    Random, OutputVar, %min%, %max%
+    send %OutputVar%
+	send {tab}
+}
+
+; ENTER COMMAND MODE
 #if WinActive("ahk_group " . Vim.GroupName) && (Vim.State.Mode == "Vim_Normal")
-:::Vim.State.SetMode("Command")
-`;::Vim.State.SetMode("Command")
+:::
+`;::
+Vim.State.SetMode("Command")
+return
+
+#if WinActive("ahk_group " . Vim.GroupName) && Vim.State.StrIsInCurrentVimMode("Insert")
+^`;::Vim.State.SetMode("Command")
 
 ; FOR ENTIRE SUPERMEMO
 #if WinActive("ahk_group " . Vim.GroupName) && (Vim.State.Mode == "Command")
@@ -15,7 +34,9 @@ return
 c::  ; change default *c*oncept group
 Vim.State.SetMode("Insert")
 WinActivate ahk_class TElWind
-click 725 65
+coord_x := 724 * A_ScreenDPI / 96
+coord_y := 68 * A_ScreenDPI / 96
+click %coord_x% %coord_y%
 back_to_normal = 1
 return
 
@@ -27,8 +48,8 @@ back_to_normal = 1
 return
 
 ; PRIORITY SCRIPT
-; made by Naess from supermemo.wiki discord server, modified by Guillem
-; details in video: https://www.youtube.com/watch?v=OwV5HPKMrbg
+; made by Naess from SuperMemo.wiki discord server, modified by Guillem
+; details: https://www.youtube.com/watch?v=OwV5HPKMrbg
 ; picture explaination: https://raw.githubusercontent.com/rajlego/supermemo-ahk/main/naess%20priorities%2010-25-2020.png
 +0::  ; shift+number: for laptop users
 NumpadIns::
@@ -208,7 +229,7 @@ if ErrorLevel {
 send ^t{esc}q^{home}{esc}  ; put caret in the start of question component unfocus every component
 return
 
-; /*  ; personal
+/* PERSONAL
 s::  ; turn active language item to passive (*s*witch)
 Vim.State.SetMode("Vim_Normal")
 send ^t{esc}  ; de-select every component
@@ -281,4 +302,67 @@ send ^l  ; learn
 sleep 500
 send !{f10}u  ; check autoplay
 send ^{f10}
+return
+*/
+
+; FOR TASK WINDOW
+#if WinActive("ahk_class TElParamDlg") && (Vim.State.Mode == "Command")
++0::  ; shift+number: for laptop users
+NumpadIns::
+setTaskValue(9024.74,9999)
+Vim.State.SetMode("Insert")
+return
+
++1::
+NumpadEnd::
+setTaskValue(7055.79,9024.74)
+Vim.State.SetMode("Insert")
+return
+
++2::
+NumpadDown::
+setTaskValue(5775.76,7055.78)
+Vim.State.SetMode("Insert")
+return
+
++3::
+NumpadPgdn::
+setTaskValue(4625,5775.75)
+Vim.State.SetMode("Insert")
+return
+
++4::
+NumpadLeft::
+setTaskValue(3721.04,4624)
+Vim.State.SetMode("Insert")
+return
+
++5::
+NumpadClear::
+setTaskValue(2808.86,3721.03)
+Vim.State.SetMode("Insert")
+return
+
++6::
+NumpadRight::
+setTaskValue(1849.18,2808.85)
+Vim.State.SetMode("Insert")
+return
+
++7::
+NumpadHome::
+setTaskValue(841.32,1849.17)
+Vim.State.SetMode("Insert")
+return
+
++8::
+NumpadUp::
+setTaskValue(360.77,841.31)
+Vim.State.SetMode("Insert")
+return
+
++9::
+NumpadPgup::
+setTaskValue(0,360.76)
+Vim.State.SetMode("Insert")
 return

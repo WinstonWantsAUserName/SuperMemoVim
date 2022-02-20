@@ -4,7 +4,6 @@
 +w::Vim.Move.Repeat("+w")
 +b::Vim.Move.Repeat("+b")
 +g::Vim.Move.Repeat("+g")
-return
 
 ; SINGLE KEY
 h::
@@ -76,7 +75,7 @@ if WinActive("ahk_class TMsgDialog") || WinActive("ahk_class TChoicesDlg") || Wi
 	send [
 	return
 }
-Vim.Move.Move("[")
+Vim.Move.Repeat("[")
 return
 
 ]::
@@ -84,7 +83,7 @@ if WinActive("ahk_class TMsgDialog") || WinActive("ahk_class TChoicesDlg") || Wi
 	send ]
 	return
 }
-Vim.Move.Move("]")
+Vim.Move.Repeat("]")
 return
 
 {::
@@ -92,7 +91,7 @@ if WinActive("ahk_class TMsgDialog") || WinActive("ahk_class TChoicesDlg") || Wi
 	send {
 	return
 }
-Vim.Move.Move("{")
+Vim.Move.Repeat("{")
 return
 
 }::
@@ -100,5 +99,5 @@ if WinActive("ahk_class TMsgDialog") || WinActive("ahk_class TChoicesDlg") || Wi
 	send }
 	return
 }
-Vim.Move.Move("}")
+Vim.Move.Repeat("}")
 return

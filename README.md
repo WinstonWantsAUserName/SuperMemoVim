@@ -2,7 +2,7 @@ Huge thanks to MasterHowToLearn, who wrote the [original SuperMemoVim](https://g
 
 # SuperMemoVim: The keyboard SuperMemo experience
 
-Disclaimer: I have been simultaneously developing and using this script for 1 month. Nothing happened to my collection so far, but I can't guarantee the same thing for the future. Please make sure you have proper backup strategy in place.
+Disclaimer: I have been simultaneously developing and using this script for 1.5 months. Nothing happened to my collection so far, but I can't guarantee the same thing for the future. Please make sure you have proper backup strategy in place.
 
 You need AutoHotkey for this. Double click SuperMemoVim.ahk, and you shall see a new icon popping up on your taskbar.
 
@@ -24,13 +24,19 @@ For selecting text and editing selected text. Press `v` in **normal** mode to en
 
 ## Command mode
 
-For longer scripts. In **normal** mode, press `;` or `:` to enter command mode, press it again to return to normal mode.
+For longer scripts. In **normal** mode, press `;` or `:` to enter command mode, press it again to return to normal mode. In **insert** mode, press `ctrl+;` to enter command mode.
 
 # Keystrokes and shortcuts
 
+Paragraph means a paragraph in html components; it means a line in every other place.
+
+Typically, adding an `alt` to the hotkey relating to paragraph operations force it to operate on a line (e.g. in html components, `shift+d`: delete to end of paragraph; `alt+shift+d`: delete to end of line).
+
+There are some limitations in html that makes adding line between paragraphs doesn't work well. Currently, what described above is mostly used in html text that has one line only.
+
 ## Navigation
 
-For both normal and visual mode.
+For both normal and visual mode. Pressing any of the `1-9` keys beforehand repeats the action for the corresponding times.
 
 ### Up/down
 
@@ -64,9 +70,9 @@ For both normal and visual mode.
 
 ### Previous/next block
 
-`[`: go to start of next line
+`[`: go to start of previous line
 
-`]`: go to end of next line
+`]`: go to start of next line
 
 `{`: go to previous paragraph
 
@@ -84,7 +90,7 @@ For both normal and visual mode.
 
 `shift+x` = `backspace`
 
-`shift+d`: **d**elete everything from caret to end of paragraph
+`shift+d`: **d**elete everything from caret to end of paragraph (`alt+shift+d` for end of line)
 
 `p`: paste without format
 
@@ -100,7 +106,7 @@ For both normal and visual mode.
 
 `d` (while not grading): page **d**own
 
-`r`: semi-**r**eload  (= `alt+home`->`alt+left`)
+`r`: semi-**r**eload  (= `alt+home` and `alt+left`)
 
 `n`: open hyperlink in current caret position (open in **n**ew window)
 
@@ -132,15 +138,17 @@ For both normal and visual mode.
 
 ### Go to insert mode
 
-`o`: add (**o**pen) a new line below current paragraph and enter insert mode
+`o`: add (**o**pen) a new line below current paragraph and enter insert mode (`alt+o` for current line)
 
-`shift+o`: add (**o**pen) a new line above current paragraph and enter insert mode
+`shift+o`: add a new line above current paragraph and enter insert mode (`alt+shift+o` for current line)
+
+`s`: delete character and substitue text (`alt+s` for line)
 
 `shift+s`: delete paragraph and **s**ubstitue text
 
-`shift+i`: go to beginning of paragraph and enter **i**nsert mode
+`shift+i`: go to beginning of paragraph and enter **i**nsert mode (`alt+shift+i` for line)
 
-`shift+a`: go to end of paragraph (**a**ppend) and enter insert mode
+`shift+a`: go to end of paragraph (**a**ppend) and enter insert mode (`alt+shift+a` for line)
 
 ### Go to visual mode
 
@@ -158,9 +166,9 @@ For both normal and visual mode.
 
 `ctrl+l` = `del` (delete forward one character)
 
-`ctrl+j`: add new line below current paragraph
+`ctrl+j`: add new line below current paragraph (`alt+ctrl+j` for current line)
 
-`ctrl+k`: add new line above current paragraph
+`ctrl+k`: add new line above current paragraph (`alt+ctrl+k` for current line)
 
 
 ## Visual mode
@@ -179,8 +187,6 @@ For both normal and visual mode.
 
 ### Basic operations
 
-`v`: select current line
-
 `x` = `backspace`
 
 `y`: copy without format (**y**ank)
@@ -198,8 +204,11 @@ For both normal and visual mode.
 ### Case conversion
 
 `u`: convert to lowercase
-`shift+u`: convert to uppercase
+
+`shift+u`: convert to uppercase 
+
 `s`: convert to sentence case
+
 `` ` ``: cycle through cases
 
 ## Command mode
@@ -224,7 +233,9 @@ For both normal and visual mode.
 
 `r`: set **r**eference's link to what's on clipboard
 
-number pad: [priority script by Naess](https://youtu.be/OwV5HPKMrbg) (also works with shift+number, for laptop users)
+number pad:
+- in main windows: [priority script by Naess](https://youtu.be/OwV5HPKMrbg) (also works with shift+number, for laptop users)
+- in task parameter window: quick task value
 
 ## Additional hotkeys
 
@@ -232,14 +243,20 @@ number pad: [priority script by Naess](https://youtu.be/OwV5HPKMrbg) (also works
 
 ctrl+m is remapped to `ctrl+shift+alt+m`, and ctrl+shift+j is remapped to `ctrl+shift+alt+j`.
 
+`ctrl+shift+f12` doesn't show notification.
+
 ### Additional functions
 
 `ctrl+alt+s`: go to **s**ource (works differently for element window / browser)
 
 `ctrl+alt+.`: go to end of `[...]` and enter insert mode
 
+`right alt + right shift + backspace`, `right ctrl + right shift + backspace`: delete element and keep learning (similar to anki)
+
+`right alt + right shift + /`, `right ctrl + right shift + /`: Done! and keep learning
+
 More intuitive inter-element linking, inspired by obsidian:
-1. Go to the element you want to lin**k** to and press `ctrl+alt+shift+k`
+1. Go to the element you want to link to and press `ctrl+alt+g`
 2. Go to the element you want to have the hyperlin**k**, select text and press `ctrl+alt+k`
 
 ### For Plan window specifically

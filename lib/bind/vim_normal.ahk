@@ -8,9 +8,9 @@ if WinActive("ahk_class TMsgDialog") || WinActive("ahk_class TChoicesDlg") || Wi
 send {del}
 return
 
-+x::  ; OG: same as backspace
-send {bs}
-return
++x::send {bs}  ; OG: same as backspace
++p::send ^v  ; SEMI-OG: paste with format
++y::send {home}+{end}^c{right}  ; OG: yank (copy) current line
 
 +d::  ; OG: *d*elete everything from caret to end of paragraph
 ControlGetFocus, currentFocus, ahk_class TElWind
@@ -18,6 +18,15 @@ if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explo
 	send ^+{down}+{left}{bs}
 } else {
 	send +{end}{bs}
+}
+return
+
+!+d::  ; force deleting from caret to end of line when editing html
+ControlGetFocus, currentFocus, ahk_class TElWind
+if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; editing html
+	send +{end}{bs}
+} else {
+	send !+d
 }
 return
 
@@ -30,14 +39,6 @@ Clipboard := Clipboard
 send ^v
 return
 
-+p::  ; SEMI-OG: paste with format
-send ^v
-return
-
-+y::  ; OG: yank (copy) current line
-send {home}+{end}^c{right}
-return
-
 ; FOR ELEMENT AND CONTENT WINDOW, AND BROWSER
 #if (WinActive("ahk_class TElWind") || WinActive("ahk_class TContents") || WinActive("ahk_class TBrowser")) && (Vim.State.Mode == "Vim_Normal")
 e::  ; focus to *e*lement window
@@ -45,15 +46,28 @@ WinActivate ahk_class TElWind
 click 40 380  ; left middle
 return
 
+; d: page down  ; also for grading
 u::  ; page *u*p
 WinActivate ahk_class TElWind
-MouseMove, 40, 380
+MouseMove 40, 380
 send {Wheelup 2}
+return
+
+!j::  ; wheel down
+WinActivate ahk_class TElWind
+MouseMove 40, 380
+send {Wheeldown}
+return
+
+!k::  ; wheel up
+WinActivate ahk_class TElWind
+MouseMove 40, 380
+send {Wheelup}
 return
 
 ; FOR ELEMENT AND CONTENT WINDOW
 #if (WinActive("ahk_class TElWind") || WinActive("ahk_class TContents")) && (Vim.State.Mode == "Vim_Normal")
-b::  ; b to open browser
+b::  ; browser
 if WinActive("ahk_class TElWind") {
 	ControlGetFocus, currentFocus, ahk_class TElWind
 	if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1" || currentFocus = "TMemo2" || currentFocus = "TMemo1") {  ; editing text
@@ -70,37 +84,41 @@ sleep 100
 send !{left}
 return
 
+c::send !c  ; content window
+
 ; FOR CONTENT WINDOW AND BROWSER
 ; 5 lines/elements down/up
 #if (WinActive("ahk_class TContents") || WinActive("ahk_class TBrowser")) && (Vim.State.Mode == "Vim_Normal")
 +j::
 if WinActive("ahk_class TContents") {
-	click 295 45  ; turning off the content-element window sync
+	coord_x := 295 * A_ScreenDPI / 96
+	coord_y := 46 * A_ScreenDPI / 96
+	click %coord_x% %coord_y%  ; turning off the content-element window sync
 	send {down 5}
-	click 295 45  ; and turning it back on
+	click %coord_x% %coord_y%  ; and turning it back on
 } else if WinActive("ahk_class TBrowser") {
-	click 640 45  ; turning off the browser-element window sync
+	coord_x := 638 * A_ScreenDPI / 96
+	coord_y := 40 * A_ScreenDPI / 96
+	click %coord_x% %coord_y%  ; turning off the browser-element window sync
 	send {down 5}
-	click 640 45  ; and turning it back on
+	click %coord_x% %coord_y%  ; and turning it back on
 }
 return
 
 +k::
 if WinActive("ahk_class TContents") {
-	click 295 45  ; turning off the content-element window sync
+	coord_x := 295 * A_ScreenDPI / 96
+	coord_y := 46 * A_ScreenDPI / 96
+	click %coord_x% %coord_y%  ; turning off the content-element window sync
 	send {up 5}
-	click 295 45  ; and turning it back on
+	click %coord_x% %coord_y%  ; and turning it back on
 } else if WinActive("ahk_class TBrowser") {
-	click 640 45  ; turning off the browser-element window sync
+	coord_x := 638 * A_ScreenDPI / 96
+	coord_y := 40 * A_ScreenDPI / 96
+	click %coord_x% %coord_y%  ; turning off the browser-element window sync
 	send {up 5}
-	click 640 45  ; and turning it back on
+	click %coord_x% %coord_y%  ; and turning it back on
 }
-return
-
-; FOR ELEMENT WINDOW AND BROWSER
-#if (WinActive("ahk_class TElWind") || WinActive("ahk_class TBrowser")) && (Vim.State.Mode == "Vim_Normal")
-c::  ; c for content window
-send !c
 return
 
 ; FOR ELEMENT WINDOW ONLY
@@ -111,26 +129,11 @@ click right
 send n
 return
 
-m::  ; VIMIUM: set read point (*m*ark)
-send ^{f7}
-return
-
-`::  ; VIMIUM: go to read point
-send !{f7}
-return
-
-+m::  ; clear read point
-send ^+{f7}
-return
-
-; go to next/previous sibling
-!+j::
-send !+{pgdn}
-return
-
-!+k::
-send !+{pgup}
-return
+m::send ^{f7}  ; VIMIUM: set read point (*m*ark)
+`::send !{f7}  ; VIMIUM: go to read point
++m::send ^+{f7}  ; clear read point
+!+j::send !+{pgdn}  ; go to next sibling
+!+k::send !+{pgup}  ; go to previous sibling
 
 ; pgdn/pgup when not focused on text
 j::
@@ -171,36 +174,35 @@ return
 
 #if WinActive("ahk_group " . Vim.GroupName) && (Vim.State.Mode == "Vim_Normal")
 s::
-if WinActive("ahk_class TElWind") {
-	ControlGetFocus, currentFocus, ahk_class TElWind
-	; if focused on either 5 of the grading buttons or the cancel button
-	if (currentFocus = "TBitBtn4" || currentFocus = "TBitBtn5" || currentFocus = "TBitBtn6" || currentFocus = "TBitBtn7" || currentFocus = "TBitBtn8" || currentFocus = "TBitBtn9") {
-		send 2
-		sleep 40
-		send {space}  ; next item
-	}
+ControlGetFocus, currentFocus, ahk_class TElWind
+; if focused on either 5 of the grading buttons or the cancel button
+if (currentFocus = "TBitBtn4" || currentFocus = "TBitBtn5" || currentFocus = "TBitBtn6" || currentFocus = "TBitBtn7" || currentFocus = "TBitBtn8" || currentFocus = "TBitBtn9") {
+	send 2
+	sleep 40
+	send {space}  ; next item
 } else if WinActive("ahk_class TPlanDlg") {  ; *s*witch plan
-	click 255 50
+	coord_x := 253 * A_ScreenDPI / 96
+	coord_y := 48 * A_ScreenDPI / 96
+	click %coord_x% %coord_y%
 } else {
-	send s
+	send {del}  ; OG: delete character and *s*ubstitue text
+	Vim.State.SetMode("Insert")
 }
 return
 
 #if (WinActive("ahk_class TElWind") || WinActive("ahk_class TContents") || WinActive("ahk_class TBrowser")) && (Vim.State.Mode == "Vim_Normal")
 d::
-if WinActive("ahk_class TElWind") {
-	ControlGetFocus, currentFocus, ahk_class TElWind
-	; if focused on either 5 of the grading buttons or the cancel button
-	if (currentFocus = "TBitBtn4" || currentFocus = "TBitBtn5" || currentFocus = "TBitBtn6" || currentFocus = "TBitBtn7" || currentFocus = "TBitBtn8" || currentFocus = "TBitBtn9") {
-		send 3
-		sleep 40
-		send {space}  ; next item
-		return
-	}
+ControlGetFocus, currentFocus, ahk_class TElWind
+; if focused on either 5 of the grading buttons or the cancel button
+if (currentFocus = "TBitBtn4" || currentFocus = "TBitBtn5" || currentFocus = "TBitBtn6" || currentFocus = "TBitBtn7" || currentFocus = "TBitBtn8" || currentFocus = "TBitBtn9") {
+	send 3
+	sleep 40
+	send {space}  ; next item
+	return
 } else {
 	WinActivate ahk_class TElWind
 }
-MouseMove, 40, 380
+MouseMove 40, 380
 send {Wheeldown 2}
 return
 
@@ -223,15 +225,13 @@ if WinActive("ahk_class TMsgDialog") || WinActive("ahk_class TChoicesDlg") || Wi
 	send g
 	return
 }
-if WinActive("ahk_class TElWind") {
-	ControlGetFocus, currentFocus, ahk_class TElWind
-	; if focused on either 5 of the grading buttons or the cancel button
-	if (currentFocus = "TBitBtn4" || currentFocus = "TBitBtn5" || currentFocus = "TBitBtn6" || currentFocus = "TBitBtn7" || currentFocus = "TBitBtn8" || currentFocus = "TBitBtn9") {
-		send 5
-		sleep 40
-		send {space}  ; next item
-		return
-	}
+ControlGetFocus, currentFocus, ahk_class TElWind
+; if focused on either 5 of the grading buttons or the cancel button
+if (currentFocus = "TBitBtn4" || currentFocus = "TBitBtn5" || currentFocus = "TBitBtn6" || currentFocus = "TBitBtn7" || currentFocus = "TBitBtn8" || currentFocus = "TBitBtn9") {
+	send 5
+	sleep 40
+	send {space}  ; next item
+	return
 }
 if (A_PriorHotkey != "g" or A_TimeSincePriorHotkey > 400) {  ; Too much time between presses, so this isn't a double-press.
 	KeyWait g

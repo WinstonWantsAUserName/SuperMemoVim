@@ -1,19 +1,17 @@
 ﻿; FOR ENTIRE SUPERMEMO
 #if WinActive("ahk_group " . Vim.GroupName)
-ctrl::
-Vim.State.SetNormal()
-return
+ctrl::Vim.State.SetNormal()
 
-esc::
+~esc::
 back_to_normal = 0
 Vim.State.SetNormal()
-send {esc}
 return
 
 ^l::  ; learn
 if WinActive("ahk_class TElWind") && !(Vim.State.StrIsInCurrentVimMode("Insert")) {
+	KeyWait ctrl
 	Vim.State.SetNormal()
-	send ^l
+	send {alt}{l 2}  ; to avoid weird IE window
 } else if WinActive("ahk_group " . Vim.GroupName) && (Vim.State.StrIsInCurrentVimMode("Insert")) {
 	send {del}
 }
@@ -45,55 +43,62 @@ return
 ^!s::  ; go to *s*ource
 Vim.State.SetNormal()
 if WinActive("ahk_class TBrowser") {  ; browser: keeps source elements only
-	click 295 45
+	coord_x := 293 * A_ScreenDPI / 96
+	coord_y := 44 * A_ScreenDPI / 96
+	click %coord_x% %coord_y%
 } else if WinExist("ahk_class TElWind") {  ; go to source (root element / hyperlink)
 	WinActivate
-	click 555 60
+	coord_x := 556 * A_ScreenDPI / 96
+	coord_y := 67 * A_ScreenDPI / 96
+	click %coord_x% %coord_y%
 }
 return
 
 ; FOR ELEMENT AND CONTENT WINDOW
 #if WinActive("ahk_class TElWind") || WinActive("ahk_class TContents")
-+h::  ; VIMIUM: go back (=alt+left)
++h::  ; VIMIUM: go back (= alt+left)
 if (Vim.State.Mode == "Vim_Normal") {
 	send !{left}
-} else {
+	return
+} else if !WinActive("ahk_class TContents") {  ; in content window, it only works in normal mode
 	ControlGetFocus, currentFocus, ahk_class TElWind
 	if (currentFocus != "Internet Explorer_Server2" && currentFocus != "Internet Explorer_Server1" && currentFocus != "TMemo2" && currentFocus != "TMemo1") {  ; not editing text
 		Vim.State.SetNormal()
-		send !{left}
-	} else {
-		send +h
+		send !{left}  ; so it works even in insert mode when not editing text
+		return
 	}
 }
+send +h
 return
 
-+l::  ; VIMIUM: go forward (=alt+right)
++l::  ; VIMIUM: go forward (= alt+right)
 if (Vim.State.Mode == "Vim_Normal") {
 	send !{right}
-} else {
+	return
+} else if !WinActive("ahk_class TContents") {  ; in content window, it only works in normal mode
 	ControlGetFocus, currentFocus, ahk_class TElWind
 	if (currentFocus != "Internet Explorer_Server2" && currentFocus != "Internet Explorer_Server1" && currentFocus != "TMemo2" && currentFocus != "TMemo1") {  ; not editing text
 		Vim.State.SetNormal()
-		send !{right}
-	} else {
-		send +l	
+		send !{right}  ; so it works even in insert mode when not editing text
+		return
 	}
 }
+send +l
 return
 
 +u::  ; go up
 if (Vim.State.Mode == "Vim_Normal") {
 	send ^{up}
-} else {
+	return
+} else if !WinActive("ahk_class TContents") {  ; in content window, it only works in normal mode
 	ControlGetFocus, currentFocus, ahk_class TElWind
 	if (currentFocus != "Internet Explorer_Server2" && currentFocus != "Internet Explorer_Server1" && currentFocus != "TMemo2" && currentFocus != "TMemo1") {  ; not editing text
 		Vim.State.SetNormal()
-		send ^{up}
-	} else {
-		send +u
+		send ^{up}  ; so it works even in insert mode when not editing text
+		return
 	}
 }
+send +u
 return
 
 ; FOR ELEMENT WINDOW ONLY
@@ -106,17 +111,13 @@ if (currentFocus != "Internet Explorer_Server2" && currentFocus != "Internet Exp
 send {space}
 return
 
-^+f12::  ; bomb format with no confirmation
+~^+f12::  ; bomb format with no confirmation
 Vim.State.SetNormal()
-send ^+{f12}{enter}
+send {enter}
 return
 
-!,::  ; play video in default system player / edit script component
-Vim.State.SetNormal()
-send ^{t 2}{f9}
-return
-
-^+bs::  ; for processing pending queue Advanced English 2018: delete element and keep learning
+>!>+bs::  ; for laptop
+>^>+bs::  ; for processing pending queue Advanced English 2018: delete element and keep learning
 Vim.State.SetNormal()
 send ^+{del}
 WinWaitActive, ahk_class TMsgDialog,, 0  ; wait for "Delete element?"
@@ -125,10 +126,16 @@ WinWaitActive, ahk_class TElWind,, 0  ; wait for element window to become focuse
 send {enter}
 return
 
-^+/::  ; done! and keep learning
+>!>+/::  ; for laptop
+>^>+/::  ; done! and keep learning
 Vim.State.SetNormal()
-send ^+{enter 3}
-sleep 500  ; leaves time for "Warning! The last child of the displayed element has been moved or deleted" to pop up
+send ^+{enter}
+WinWaitActive, ahk_class TMsgDialog,, 0  ; "Do you want to remove all element contents from the collection?"
+send {enter}
+WinWaitActive, ahk_class TMsgDialog,, 0  ; wait for "Delete element?"
+send {enter}
+WinWaitActive, ahk_class TElWind,, 0  ; wait for element window to become focused again
+sleep 300  ; leaves time for "Warning! The last child of the displayed element has been moved or deleted" to pop up
 ControlGetText, currentText, TBitBtn3
 if (currentText = "Learn") {
 	send {enter}
@@ -136,9 +143,9 @@ if (currentText = "Learn") {
 return
 
 ; more intuitive inter-element linking, inspired by obsidian
-; 1. go to the element you want to link to and press ctrl+alt+shift+k
+; 1. go to the element you want to link to and press ctrl+alt+g
 ; 2. go to the element you want to have the hyperlink, select text and press ctrl+alt+k
-^!+k::
+^!g::
 Vim.State.SetNormal()
 send ^g
 WinWaitActive, ahk_class TInputDlg,, 0
@@ -146,67 +153,54 @@ send ^c{esc}
 return
 
 ^!k::
-Vim.State.SetNormal()
 ControlGetFocus, currentFocus, ahk_class TElWind
-if (currentFocus != "Internet Explorer_Server2" && currentFocus != "Internet Explorer_Server1") {  ; not editing html
-	return
+if Vim.State.StrIsInCurrentVimMode("Insert") && (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; in insert mode and editing html
+	send {home}{enter}{up}  ; force new line above current line
+} else {
+	Vim.State.SetNormal()
+	if (currentFocus != "Internet Explorer_Server2" && currentFocus != "Internet Explorer_Server1") {  ; not editing html
+		return
+	}
+	element_number := RegExReplace(Clipboard, "^#")
+	hyperlink = SuperMemoElementNo=(%element_number%)
+	send ^k
+	WinWaitActive, ahk_class Internet Explorer_TridentDlgFrame,, 2  ; a bit more delay since everybody knows how slow IE can be
+	clip(hyperlink)
+	send {enter}
 }
-element_number := RegExReplace(Clipboard, "^#")
-hyperlink = SuperMemoElementNo=(%element_number%)
-send ^k
-WinWaitActive, ahk_class Internet Explorer_TridentDlgFrame,, 2  ; a bit more delay since everybody knows how slow IE can be
-clip(hyperlink)
-send {enter}
 return
 
 ; back to normal after various hotkeys
-!x::  ; extract
+~!x::  ; extract
+~!z::  ; cloze
+~^n::  ; paste new topic
+~!d::  ; duplicate
+~^p::  ; plan
+~!t::  ; set title
 Vim.State.SetNormal()
-send !x
 return
 
-!z::  ; cloze
-Vim.State.SetNormal()
-send !z
-return
-
-^n::  ; paste new topic
-Vim.State.SetNormal()
-send ^n
-return
-
-!d::  ; duplicate
-Vim.State.SetNormal()
-send !d
-return
-
-^p::  ; plan
-Vim.State.SetNormal()
-send ^p
-return
-
+/* PERSONAL
 ^!m::  ; YT: set start point
 Vim.State.SetNormal()
-click 85 705
+coord_x := 83 * A_ScreenDPI / 96
+coord_y := 708 * A_ScreenDPI / 96
+click %coord_x% %coord_y%
 return
 
-!t::  ; set title
-Vim.State.SetMode("Vim_Normal")
-send !t
+>!.::  ; for laptop
+>!,::  ; play video in default system player / edit script component
+Vim.State.SetNormal()
+send ^{t 2}{f9}
 return
+*/
 
 ; OTHER WINDOWS
 #if WinActive("ahk_class TWebDlg")
-!i::  ; normal mode after import
-Vim.State.SetNormal()
-send !i
-return
+~!i::Vim.State.SetNormal()  ; normal mode after import
 
 #if WinActive("ahk_class TInputDlg")
-!enter::
-Vim.State.SetNormal()
-send !{enter}
-return
+~!enter::Vim.State.SetNormal()
 
 ; FOR PLAN WINDOW ONLY
 #if WinActive("ahk_class TPlanDlg")
@@ -231,7 +225,7 @@ if (UserInput = "b") {  ; shortcuts
 	UserInput = Coding
 } else if (UserInput = "s") {
 	UserInput = Sports
-} else if (UserInput = "so") {
+} else if (UserInput = "o") {
 	UserInput = Social
 } else if (UserInput = "w") {
 	UserInput = Writing
@@ -249,8 +243,8 @@ if (split = 1) {
 send {down}{Insert}  ; inserting one activity below the current selected activity and start editing
 SendInput %UserInput%  ; SendInput is faster than clip() here
 send !b  ; begin
-WinWaitActive, ahk_class TMsgDialog,, 0  ; wait for "Mark the slot with the drop to efficiency?"
-if !ErrorLevel {
+sleep 250  ; wait for "Mark the slot with the drop to efficiency?"
+if WinActive("ahk_class TMsgDialog") {
 	send y
 }
 WinWaitActive, ahk_class TPlanDlg,, 0

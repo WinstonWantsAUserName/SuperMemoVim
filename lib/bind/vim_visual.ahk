@@ -12,22 +12,26 @@ return
 Vim.State.SetMode("Vim_VisualChar")
 ControlGetFocus, currentFocus, ahk_class TElWind
 if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; editing html
-	send ^{down}^+{up}{left}^+{down}
+	send ^{down}^+{up}{left}^+{down}  ; select entire paragraph
 } else {
-	send {home}+{end}
+	send {home}+{end}  ; select entire line
 }
 return
 
-^a::
-Vim.State.SetMode("Vim_VisualChar")
-send ^a
-return
+~^a::Vim.State.SetMode("Vim_VisualChar")
 
 ; FOR ENTIRE SUPERMEMO
 #if WinActive("ahk_group " . Vim.GroupName) && (Vim.State.StrIsInCurrentVimMode("Visual"))
-v::  ; select entire line
-send {home}+{end}
+~^+i::  ; ignore
+~^c::  ; copy
+~^b::  ; bold
+~^i::  ; italic
+~^u::  ; underline
+Vim.State.SetMode("Vim_Normal")
+send {right}
 return
+
+v::send {home}+{end}  ; select entire line
 
 .::  ; selected text becomes [...]
 Vim.State.SetMode("Vim_Normal", 0, 0, 0)
@@ -39,11 +43,6 @@ f::  ; parse html (*f*ormat)
 ^+1::
 Vim.State.SetMode("Vim_Normal")
 send ^+1
-return
-
-^+i::  ; ignore
-Vim.State.SetMode("Vim_Normal")
-send ^+i
 return
 
 x::
@@ -64,11 +63,6 @@ return
 +y::  ; yank
 Vim.State.SetMode("Vim_Normal")
 send ^c{right}
-return
-
-^c::  ; copy
-Vim.State.SetMode("Vim_Normal")
-send ^c
 return
 
 +p::

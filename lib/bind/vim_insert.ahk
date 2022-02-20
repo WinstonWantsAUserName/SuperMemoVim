@@ -1,26 +1,18 @@
-#if WinActive("ahk_group " . Vim.GroupName) && (Vim.State.StrIsInCurrentVimMode("Insert"))
-^w::  ; delete back a word
-send ^+{left}{bs}
-return
+#if WinActive("ahk_group " . Vim.GroupName) && Vim.State.StrIsInCurrentVimMode("Insert")
+^w::send ^+{left}{bs}  ; delete back a word
+^e::send ^{del}  ; delete forward a word
+^h::send {bs}  ; backspace
+; ^l: send {del}  ; also for learning
 
-^e::  ; delete forward a word
-send ^{del}
-return
-
-^h::  ; backspace
-send {bs}
-return
-
-^j::  ; new line below
+; ^j: new line below current paragraph  ; also for reschedule
+^!j::  ; force new line below current line when editing html
 ControlGetFocus, currentFocus, ahk_class TElWind
 if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; editing html
-	send ^{down}{left}{enter}
-} else {
 	send {end}{enter}
 }
 return
 
-^k::  ; new line above
+^k::  ; new line above current paragraph
 ControlGetFocus, currentFocus, ahk_class TElWind
 if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; editing html
 	send ^+{up}{left}{enter}{up}
@@ -28,3 +20,4 @@ if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explo
 	send {home}{enter}{up}
 }
 return
+; ^!k: force new line above current line when editing html  ; also for hyperlinking elements

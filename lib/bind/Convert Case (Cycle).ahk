@@ -8,7 +8,7 @@ SetWorkingDir %A_ScriptDir%
 
 cycleNumber := 1
 
-#IfWinNotActive ahk_class XLMAIN
+#ifWinNotActive ahk_class XLMAIN
 
 ConvertUpper()
 {
@@ -71,7 +71,7 @@ ConvertMixed()
 	Clipboard := clipSave
 }
 /*
-#IfWinNotActive
+#ifWinNotActive
 
 ; CTRL + ALT + Q: Wrap selected text in double quotes
 ^!q::

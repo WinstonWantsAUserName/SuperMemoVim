@@ -9,33 +9,21 @@ return
 
 ; FOR ENTIRE SUPERMEMO
 #if WinActive("ahk_group " . Vim.GroupName)
-shift::Vim.State.SetMode("Insert")
+shift::  ; shift: go to insert mode
+~AppsKey::  ; menu key
+~RButton::  ; right click
+Vim.State.SetMode("Insert")
+return
+
+~^f::  ; search
+~^r::  ; replace
+Vim.State.SetMode("Insert")
+back_to_normal = 1
+return
 
 alt::  ; for access keys
 Vim.State.SetMode("Insert")
-send {alt}
-return
-
-AppsKey::  ; menu key
-Vim.State.SetMode("Insert")
-send {AppsKey}
-return
-
-^f::  ; search
-Vim.State.SetMode("Insert")
-send ^f
-back_to_normal = 1
-return
-
-^r::  ; replace
-Vim.State.SetMode("Insert")
-send ^r
-back_to_normal = 1
-return
-
-RButton::  ; right click
-Vim.State.SetMode("Insert")
-click right
+send {alt}  ; cannot use tilde, because you wouldn't want other keys like alt+d to go to insert
 return
 
 f3::  ; search in article / repeat last search
@@ -50,7 +38,7 @@ if !ErrorLevel {
 return
 
 ^j::  ; change interval
-if Vim.State.StrIsInCurrentVimMode("Insert") {
+if Vim.State.StrIsInCurrentVimMode("Insert") {  ; new line below current paragraph in insert mode
 	ControlGetFocus, currentFocus, ahk_class TElWind
 	if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; editing html
 		send ^{down}{left}{enter}
@@ -64,8 +52,20 @@ if Vim.State.StrIsInCurrentVimMode("Insert") {
 }
 return
 
+~!r::  ; rename
+WinWaitActive, ahk_class TInputDlg,, 0
+if !ErrorLevel {
+	Vim.State.SetMode("Insert")
+}
+return
+
 ; FOR ENTIRE SUPERMEMO AND NORMAL MODE
 #if WinActive("ahk_group " . Vim.GroupName) && (Vim.State.Mode == "Vim_Normal")
+~!p::  ; change priority
+Vim.State.SetMode("Insert")
+back_to_normal = 1
+return
+
 o::  ; OG: new line below current paragraph and insert
 if WinActive("ahk_class TMsgDialog") || WinActive("ahk_class TChoicesDlg") || WinActive("ahk_class TChecksDlg") {  ; dialogue windows
 	send o
@@ -80,14 +80,34 @@ if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explo
 Vim.State.SetMode("Insert")
 return
 
+!o::  ; force new line below current line when editing html
+ControlGetFocus, currentFocus, ahk_class TElWind
+if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; editing html
+	send {end}{enter}
+	Vim.State.SetMode("Insert")
+} else {
+	send !o
+}
+return
+
 +o::  ; OG: new line above current paragraph and insert
 ControlGetFocus, currentFocus, ahk_class TElWind
 if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; editing html
-	send ^+{up}{left}{enter}{up}
+	send ^{down}^+{up}{left}{enter}{up}
 } else {
 	send {home}{enter}{up}
 }
 Vim.State.SetMode("Insert")
+return
+
+!+o::  ; force new line above current line when editing html
+ControlGetFocus, currentFocus, ahk_class TElWind
+if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; editing html
+	send {home}{enter}{up}
+	Vim.State.SetMode("Insert")
+} else {
+	send !+o
+}
 return
 
 +s::  ; OG: delete paragraph and substitute
@@ -100,7 +120,17 @@ if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explo
 Vim.State.SetMode("Insert")
 return
 
-+i::  ; OG: go to beginning of paragraph and *i*nsert
+!s::  ; force substitute line when editing html
+ControlGetFocus, currentFocus, ahk_class TElWind
+if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; editing html
+	send {end}+{home}{bs}
+	Vim.State.SetMode("Insert")
+} else {
+	send +!s
+}
+return
+
++i::  ; OG: go to start of paragraph and *i*nsert
 ControlGetFocus, currentFocus, ahk_class TElWind
 if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; editing html
 	send ^+{up}{left}
@@ -108,6 +138,16 @@ if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explo
 	send {home}
 }
 Vim.State.SetMode("Insert")
+return
+
+!+i::  ; force go to start of line and insert when editing html
+ControlGetFocus, currentFocus, ahk_class TElWind
+if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; editing html
+	send {home}
+	Vim.State.SetMode("Insert")
+} else {
+	send +!s
+}
 return
 
 +a::  ; OG: go to end of paragraph and insert (*a*ppend)
@@ -118,6 +158,16 @@ if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explo
 	send {end}
 }
 Vim.State.SetMode("Insert")
+return
+
+!+a::  ; force go to end of paragraph and insert when editing html
+ControlGetFocus, currentFocus, ahk_class TElWind
+if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; editing html
+	send {end}
+	Vim.State.SetMode("Insert")
+} else {
+	send +!a
+}
 return
 
 ; FOR ELEMENT AND CONTENT WINDOW, AND BROWSER
@@ -140,15 +190,8 @@ if WinExist("ahk_class TMyFindDlg") {  ; clears search box window
 }
 return
 
-!p::  ; change priority
-Vim.State.SetMode("Insert")
-send !p
-back_to_normal = 1
-return
-
 ^!+j::  ; later today: remapped to ctrl+shift+alt+J
 Vim.State.SetMode("Insert")
-ControlGetText, currentText, TBitBtn3
 send ^+j
 back_to_normal = 1
 return
@@ -161,143 +204,77 @@ return
 
 ; FOR ELEMENT WINDOW ONLY
 #if WinActive("ahk_class TElWind")
-^o::  ; switch collection
+~^o::  ; switch collection
+~f6::  ; format
+~^+p::  ; comments
+~^+m::  ; change template
+~^enter::  ; commander
+~!q::  ; add references
+~!f10::  ; element menu
+~!f12::  ; component menu
+~!a::  ; add new item
+~!n::  ; add new topic
+~!+x::  ; extract with priority
 Vim.State.SetMode("Insert")
-send ^o
 back_to_normal = 1
 return
 
-f6::  ; format
+~^f3::  ; search
 Vim.State.SetMode("Insert")
-send {f6}
-back_to_normal = 1
-return
-
-^+p::  ; comments
-Vim.State.SetMode("Insert")
-send ^+p
-back_to_normal = 1
-return
-
-^+m::  ; change template
-Vim.State.SetMode("Insert")
-send ^+m
-back_to_normal = 1
-return
-
-^enter::  ; commander
-Vim.State.SetMode("Insert")
-send ^{enter}
-back_to_normal = 1
-return
-
-!q::  ; add references
-Vim.State.SetMode("Insert")
-send !q
-back_to_normal = 1
-return
-
-^f3::  ; search
-Vim.State.SetMode("Insert")
-send ^{f3}
 back_to_normal = 2
 return
 
-!f10::  ; element menu
-Vim.State.SetMode("Insert")
-KeyWait alt  ; without this the menu disappears
-send !{f10}
-return
-
-!f12::  ; component menu
-Vim.State.SetMode("Insert")
-KeyWait alt  ; without this the menu disappears
-send !{f12}
-return
-
-!a::  ; add new item
-Vim.State.SetMode("Insert")
-send !a
-return
-
-!n::  ; add new topic
-Vim.State.SetMode("Insert")
-send !n
-return
-
-!k::  ; YT: pause and focus on the 2nd html component (note editing)
+/* PERSONAL
+!f::  ; YT: pause and focus on the 2nd html component (note editing)
 KeyWait alt
 Vim.State.SetMode("Insert")
-click 75 630
+coord_x := 74 * A_ScreenDPI / 96
+coord_y := 628 * A_ScreenDPI / 96
+click %coord_x% %coord_y%
 send ^{t 2}
 return
 
 !y::  ; YT: focus onto 1st html component (YT video)
 KeyWait alt
 Vim.State.SetMode("Insert")
-click 195 645
+coord_x := 193 * A_ScreenDPI / 96
+coord_y := 640 * A_ScreenDPI / 96
+click %coord_x% %coord_y%
 return
-
-!r::  ; rename
-send !r
-WinWaitActive, ahk_class TInputDlg,, 0
-if !ErrorLevel {
-	Vim.State.SetMode("Insert")
-}
-return
-
-!f1::  ; add task
-Vim.State.SetMode("Insert")
-send !{f1}
-back_to_normal = 1
-return
+*/
 
 ; FOR IMPORT DIALOGUE ONLY
 #if WinActive("ahk_class TWebDlg")
-!t::  ; edit title during import
+~!t::  ; edit title during import
+~!g::  ; choose concept group during import
+~!m::  ; change minimum priority during import
+~!x::  ; change maximum priority during import
 Vim.State.SetMode("Insert")
-send !t
-return
-
-!g::  ; choose concept group during import
-Vim.State.SetMode("Insert")
-send !g
-return
-
-!m::  ; change minimum priority during import
-Vim.State.SetMode("Insert")
-send !m
-return
-
-!x::  ; change maximum priority during import
-Vim.State.SetMode("Insert")
-send !x
 return
 
 ; FOR PLAN WINDOW ONLY
 #if WinActive("ahk_class TPlanDlg")
-insert::
-NumpadIns::
+~insert::
+~NumpadIns::
+~!m::  ; plan manu
 Vim.State.SetMode("Insert")
-send {insert}
 return
 
-^t::  ; split activity
+~^t::  ; split activity
 Vim.State.SetMode("Insert")
-send ^t
 back_to_normal = 1
-return
-
-!m::  ; plan manu
-Vim.State.SetMode("Insert")
-KeyWait alt  ; without this the menu disappears
-send !m
 return
 
 ; FOR CONTENT WINDOW ONLY
 #if WinActive("ahk_class TContents")
-f2::  ; rename element in content window
+~f2::  ; rename element in content window
 Vim.State.SetMode("Insert")
-send {f2}
+back_to_normal = 1
+return
+
+; OTHER WINDOWS
+#if WinActive("ahk_class TElWind") || WinActive("ahk_class TTaskManager")
+~!f1::  ; add task
+Vim.State.SetMode("Insert")
 back_to_normal = 1
 return
