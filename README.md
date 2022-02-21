@@ -74,9 +74,9 @@ For both normal and visual mode. Pressing any of the `1-9` keys beforehand repea
 
 `]`: go to start of next line
 
-`{`: go to previous paragraph
+`{` (`shift+[`): go to previous paragraph
 
-`}`: go to next paragraph (= `ctrl+down`)
+`}` (`shift+]`): go to next paragraph (= `ctrl+down`)
 
 `gg` (press `g` twice): **g**o to top (= `ctrl+home`)
 
