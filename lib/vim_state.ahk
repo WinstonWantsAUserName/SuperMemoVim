@@ -67,18 +67,14 @@
     this.LastIME := VIM_IME_Get()
     if (this.LastIME) {
       if (VIM_IME_GetConverting(A)) {
-        ; send {esc}
         return
       } else {
         VIM_IME_SET()
       }
     }
-    ; if (this.StrIsInCurrentVimMode("Visual") or this.StrIsInCurrentVimMode("ydc")) {
-      ; send {right}
-      ; if WinActive("ahk_group VimCursorSameAfterSelect") {
-        ; send {left}
-      ; }
-    ; }
+    if this.StrIsInCurrentVimMode("Visual") {
+      send {right}
+    }
     this.SetMode("Vim_Normal")
   }
 
