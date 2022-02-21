@@ -111,7 +111,10 @@
     if (this.Vim.State.n == 0) {
       this.Vim.State.n := 1
     }
-	if WinActive("ahk_class TContents") && ((key = "j") || (key = "+j") || (key = "k") || (key = "+k")) {
+	; a single up/down in element window / browser doesn't need to turn off the browser-element window sync
+	if (WinActive("ahk_class TContents") || WinActive("ahk_class TBrowser")) && (key = "j" || key = "k") && this.Vim.State.n == 1 {
+		this.Vim.Move.Move(key)
+	} else if WinActive("ahk_class TContents") && ((key = "j") || (key = "+j") || (key = "k") || (key = "+k")) {
 		coord_x := 295 * A_ScreenDPI / 96
 		coord_y := 46 * A_ScreenDPI / 96
 		click %coord_x% %coord_y%  ; turning off the content-element window sync
