@@ -86,41 +86,6 @@ return
 
 c::send !c  ; content window
 
-; FOR CONTENT WINDOW AND BROWSER
-; 5 lines/elements down/up
-#if (WinActive("ahk_class TContents") || WinActive("ahk_class TBrowser")) && (Vim.State.Mode == "Vim_Normal")
-+j::
-if WinActive("ahk_class TContents") {
-	coord_x := 295 * A_ScreenDPI / 96
-	coord_y := 46 * A_ScreenDPI / 96
-	click %coord_x% %coord_y%  ; turning off the content-element window sync
-	send {down 5}
-	click %coord_x% %coord_y%  ; and turning it back on
-} else if WinActive("ahk_class TBrowser") {
-	coord_x := 638 * A_ScreenDPI / 96
-	coord_y := 40 * A_ScreenDPI / 96
-	click %coord_x% %coord_y%  ; turning off the browser-element window sync
-	send {down 5}
-	click %coord_x% %coord_y%  ; and turning it back on
-}
-return
-
-+k::
-if WinActive("ahk_class TContents") {
-	coord_x := 295 * A_ScreenDPI / 96
-	coord_y := 46 * A_ScreenDPI / 96
-	click %coord_x% %coord_y%  ; turning off the content-element window sync
-	send {up 5}
-	click %coord_x% %coord_y%  ; and turning it back on
-} else if WinActive("ahk_class TBrowser") {
-	coord_x := 638 * A_ScreenDPI / 96
-	coord_y := 40 * A_ScreenDPI / 96
-	click %coord_x% %coord_y%  ; turning off the browser-element window sync
-	send {up 5}
-	click %coord_x% %coord_y%  ; and turning it back on
-}
-return
-
 ; FOR ELEMENT WINDOW ONLY
 #if WinActive("ahk_class TElWind") && (Vim.State.Mode == "Vim_Normal")
 n::  ; open hyperlink in current caret position (Open in *n*ew window)
