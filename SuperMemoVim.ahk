@@ -9,5 +9,4 @@ Return
 
 #Include %A_LineFile%\..\lib\vim_ahk.ahk
 
-; Ctrl-Alt-R to restart SuperMemoVim
 ^!r::Reload

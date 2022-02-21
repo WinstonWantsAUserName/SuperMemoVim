@@ -9,6 +9,4 @@
 #Include %A_LineFile%\..\bind\vim_command.ahk
 #Include %A_LineFile%\..\bind\Convert Case (Cycle).ahk
 #Include %A_LineFile%\..\bind\vim_repeat.ahk
-
-; Reset the condition
-#if
+#Include %A_LineFile%\..\bind\extra.ahk

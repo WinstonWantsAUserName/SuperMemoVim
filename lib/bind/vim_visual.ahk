@@ -1,8 +1,11 @@
-﻿; FROM NORMAL MODE
-#if WinActive("ahk_group " . Vim.GroupName) && (Vim.State.Mode == "Vim_Normal")
+﻿;;;;;;;;;;;;;;;;;;
+; FROM NORMAL MODE
+;;;;;;;;;;;;;;;;;;
+#if WinActive("ahk_group " . Vim.GroupName) && Vim.State.Mode == "Vim_Normal"
+~^a::Vim.State.SetMode("Vim_VisualChar")
+
 v::
-if WinActive("ahk_class TMsgDialog") || WinActive("ahk_class TChoicesDlg") || WinActive("ahk_class TChecksDlg") {  ; dialogue windows
-	send v
+if dialogueWindow() {
 	return
 }
 Vim.State.SetMode("Vim_VisualChar")
@@ -18,10 +21,29 @@ if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explo
 }
 return
 
-~^a::Vim.State.SetMode("Vim_VisualChar")
+!0::
+Vim.State.SetMode("Vim_VisualChar")
+send +{home}
+return
 
+!$::
+Vim.State.SetMode("Vim_VisualChar")
+send +{end}
+return
+
+!{::
+Vim.State.SetMode("Vim_VisualChar")
+send ^+{up}
+return
+
+!}::
+Vim.State.SetMode("Vim_VisualChar")
+send ^+{down}
+return
+;;;;;;;;;;;;;;;;;;;;;;
 ; FOR ENTIRE SUPERMEMO
-#if WinActive("ahk_group " . Vim.GroupName) && (Vim.State.StrIsInCurrentVimMode("Visual"))
+;;;;;;;;;;;;;;;;;;;;;;
+#if WinActive("ahk_group " . Vim.GroupName) && Vim.State.StrIsInCurrentVimMode("Visual")
 ~^+i::  ; ignore
 ~^c::  ; copy
 ~^b::  ; bold
@@ -45,8 +67,8 @@ Vim.State.SetMode("Vim_Normal")
 send ^+1
 return
 
-x::
-bs::  ; backspace
+x::  ; backspace
+bs::
 Vim.State.SetMode("Vim_Normal")
 send {bs}
 return
@@ -65,8 +87,8 @@ Vim.State.SetMode("Vim_Normal")
 send ^c{right}
 return
 
-+p::
-^v::  ; paste
++p::  ; paste
+^v::
 Vim.State.SetMode("Vim_Normal")
 send ^v
 return
@@ -77,8 +99,8 @@ Clipboard := Clipboard
 send ^v
 return
 
-+d::
-^x::  ; cut
++d::  ; cut
+^x::
 Vim.State.SetMode("Vim_Normal")
 send ^x
 return
@@ -137,8 +159,10 @@ ConvertMixed()
 cycleNumber:= 1
 }
 Return
-
+;;;;;;;;;;;;;;;;;;;;;;;;;
 ; FOR ELEMENT WINDOW ONLY
+;;;;;;;;;;;;;;;;;;;;;;;;;
+#if WinActive("ahk_class TElWind") && Vim.State.StrIsInCurrentVimMode("Visual")
 !x:: ; default SuperMemo shortcut
 e::
 Vim.State.SetMode("Vim_Normal", 0, 0, 0)
@@ -151,7 +175,6 @@ Vim.State.SetMode("Vim_Normal", 0, 0, 0)
 send !z
 return
 
-#if WinActive("ahk_class TElWind") && (Vim.State.StrIsInCurrentVimMode("Visual"))
 t::  ; highligh*t*
 Vim.State.SetMode("Vim_Normal")
 ControlGetFocus, currentFocus, ahk_class TElWind

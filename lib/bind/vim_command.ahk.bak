@@ -234,7 +234,7 @@ if ErrorLevel {
 send ^t{esc}q^{home}{esc}  ; put caret in the start of question component unfocus every component
 return
 
-/* PERSONAL
+; /* PERSONAL
 s::  ; turn active language item to passive (*s*witch)
 Vim.State.SetMode("Vim_Normal")
 send ^t{esc}  ; de-select every component
@@ -308,7 +308,7 @@ sleep 500
 send !{f10}u  ; check autoplay
 send ^{f10}
 return
-*/
+; */
 ;;;;;;;;;;;;;;;;;
 ; FOR TASK WINDOW
 ;;;;;;;;;;;;;;;;;

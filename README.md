@@ -156,6 +156,14 @@ For both normal and visual mode. Pressing any of the `1-9` keys beforehand repea
 
 `shift+v`: select entire paragraph and enter visual mode
 
+`alt+0`: select from caret to start of line
+
+`alt+shift+4` / `alt+$`: select from caret to end of line
+
+`alt+shift+[` / `alt+{`: select from caret to start of paragraph
+
+`alt+shift+]` / `alt+}`: select from caret to end of paragraph
+
 ## Insert mode
 
 `ctrl+w`: deleting back a **w**ord (= `ctrl+backspace`)

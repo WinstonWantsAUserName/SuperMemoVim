@@ -228,7 +228,7 @@ Vim.State.SetMode("Insert")
 back_to_normal = 2
 return
 
-/* PERSONAL
+; /* PERSONAL
 !f::  ; YT: pause and focus on the 2nd html component (note editing)
 KeyWait alt
 Vim.State.SetMode("Insert")
@@ -245,7 +245,7 @@ coord_x := 193 * A_ScreenDPI / 96
 coord_y := 640 * A_ScreenDPI / 96
 click %coord_x% %coord_y%
 return
-*/
+; */
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; FOR IMPORT DIALOGUE ONLY
 ;;;;;;;;;;;;;;;;;;;;;;;;;;

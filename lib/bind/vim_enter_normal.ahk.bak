@@ -185,7 +185,7 @@ return
 Vim.State.SetNormal()
 return
 
-/* PERSONAL
+; /* PERSONAL
 ^!m::  ; YT: set start point
 Vim.State.SetNormal()
 coord_x := 83 * A_ScreenDPI / 96
@@ -198,7 +198,7 @@ return
 Vim.State.SetNormal()
 send ^{t 2}{f9}
 return
-*/
+; */
 ;;;;;;;;;;;;;;;
 ; OTHER WINDOWS
 ;;;;;;;;;;;;;;;

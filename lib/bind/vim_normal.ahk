@@ -1,8 +1,9 @@
-﻿; FOR ENTIRE SUPERMEMO
+﻿;;;;;;;;;;;;;;;;;;;;;;
+; FOR ENTIRE SUPERMEMO
+;;;;;;;;;;;;;;;;;;;;;;
 #if WinActive("ahk_group " . Vim.GroupName) && Vim.State.Mode == "Vim_Normal"
 x::  ; OG: same as delete
-if WinActive("ahk_class TMsgDialog") || WinActive("ahk_class TChoicesDlg") || WinActive("ahk_class TChecksDlg") {  ; dialogue windows
-	send x
+if dialogueWindow() {
 	return
 }
 send {del}
@@ -31,15 +32,15 @@ if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explo
 return
 
 p::  ; SEMI-OG: paste without format
-if WinActive("ahk_class TMsgDialog") || WinActive("ahk_class TChoicesDlg") || WinActive("ahk_class TChecksDlg") {  ; dialogue windows
-	send p
+if dialogueWindow() {
 	return
 }
 Clipboard := Clipboard
 send ^v
 return
-
-; FOR ELEMENT AND CONTENT WINDOW, AND BROWSER
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; FOR ELEMENT WINDOW / CONTENT WINDOW / BROWSER
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #if (WinActive("ahk_class TElWind") || WinActive("ahk_class TContents") || WinActive("ahk_class TBrowser")) && Vim.State.Mode == "Vim_Normal"
 e::  ; focus to *e*lement window
 WinActivate ahk_class TElWind
@@ -66,8 +67,9 @@ MouseMove 40, 380
 KeyWait alt
 send {Wheelup}
 return
-
-; FOR ELEMENT AND CONTENT WINDOW
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; FOR ELEMENT WINDOW / CONTENT WINDOW
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #if (WinActive("ahk_class TElWind") || WinActive("ahk_class TContents")) && Vim.State.Mode == "Vim_Normal"
 b::  ; browser
 if WinActive("ahk_class TElWind") {
@@ -87,8 +89,9 @@ send !{left}
 return
 
 c::send !c  ; content window
-
+;;;;;;;;;;;;;;;;;;;;;;;;;
 ; FOR ELEMENT WINDOW ONLY
+;;;;;;;;;;;;;;;;;;;;;;;;;
 #if WinActive("ahk_class TElWind") && Vim.State.Mode == "Vim_Normal"
 n::  ; open hyperlink in current caret position (Open in *n*ew window)
 MouseMove, %A_CaretX%, %A_CaretY%
@@ -120,8 +123,9 @@ if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explo
 	send {pgup}
 }
 return
-
+;;;;;;;;;
 ; GRADING
+;;;;;;;;;
 #if WinActive("ahk_group " . Vim.GroupName) && Vim.State.Mode == "Vim_Normal"
 a::
 ControlGetFocus, currentFocus, ahk_class TElWind
@@ -131,7 +135,7 @@ if (currentFocus = "TBitBtn4" || currentFocus = "TBitBtn5" || currentFocus = "TB
     sleep 40
     send {space}  ; next item
 ; send a in: dialogue windows; not focused on text components (focus to answer field)
-} else if (WinActive("ahk_class TMsgDialog") || WinActive("ahk_class TChoicesDlg") || WinActive("ahk_class TChecksDlg")) || !(currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1" || currentFocus = "TMemo2" || currentFocus = "TMemo1") {
+} else if (WinActive("ahk_class TMsgDialog") || WinActive("ahk_class TChoicesDlg") || WinActive("ahk_class TChecksDlg")) || (WinActive("ahk_class TElWind") && !(currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1" || currentFocus = "TMemo2" || currentFocus = "TMemo1")) {
 	send a
 } else {
 	send {right}  ; OG: *a*ppend
@@ -141,6 +145,9 @@ return
 
 #if WinActive("ahk_group " . Vim.GroupName) && Vim.State.Mode == "Vim_Normal"
 s::
+if dialogueWindow() {
+	return
+}
 ControlGetFocus, currentFocus, ahk_class TElWind
 ; if focused on either 5 of the grading buttons or the cancel button
 if (currentFocus = "TBitBtn4" || currentFocus = "TBitBtn5" || currentFocus = "TBitBtn6" || currentFocus = "TBitBtn7" || currentFocus = "TBitBtn8" || currentFocus = "TBitBtn9") {
@@ -188,8 +195,7 @@ return
 
 #if WinActive("ahk_group " . Vim.GroupName) && Vim.State.Mode == "Vim_Normal"
 g::
-if WinActive("ahk_class TMsgDialog") || WinActive("ahk_class TChoicesDlg") || WinActive("ahk_class TChecksDlg") {  ; dialogue windows
-	send g
+if dialogueWindow() {
 	return
 }
 ControlGetFocus, currentFocus, ahk_class TElWind
