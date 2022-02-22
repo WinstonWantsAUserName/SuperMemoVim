@@ -48,6 +48,7 @@ click 40 380  ; left middle
 return
 
 ; d: page down  ; also for grading
+
 u::  ; page *u*p
 WinActivate ahk_class TElWind
 MouseMove 40, 380
@@ -92,6 +93,7 @@ c::send !c  ; content window
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ; FOR ELEMENT WINDOW ONLY
 ;;;;;;;;;;;;;;;;;;;;;;;;;
+; no need for checking dialogue window because it's for element window only
 #if WinActive("ahk_class TElWind") && Vim.State.Mode == "Vim_Normal"
 n::  ; open hyperlink in current caret position (Open in *n*ew window)
 MouseMove, %A_CaretX%, %A_CaretY%
@@ -121,6 +123,16 @@ if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explo
 	Vim.Move.Repeat("k")
 } else {
 	send {pgup}
+}
+return
+
+; disable { and } if in element window and not focused on html
+{::  ; requires ctrl+shift+up; clashes with turning up priority
+}::
+ControlGetFocus, currentFocus, ahk_class TElWind
+if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; editing text
+	Vim.Move.Repeat(A_ThisHotkey)
+	return
 }
 return
 ;;;;;;;;;

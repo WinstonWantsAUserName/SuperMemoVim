@@ -1,9 +1,9 @@
-﻿;;;;;;;;;;;;;;;;;;
+﻿#if WinActive("ahk_group " . Vim.GroupName)
+~^a::Vim.State.SetMode("Vim_VisualChar")
+;;;;;;;;;;;;;;;;;;
 ; FROM NORMAL MODE
 ;;;;;;;;;;;;;;;;;;
 #if WinActive("ahk_group " . Vim.GroupName) && Vim.State.Mode == "Vim_Normal"
-~^a::Vim.State.SetMode("Vim_VisualChar")
-
 v::
 if dialogueWindow() {
 	return
@@ -44,15 +44,14 @@ return
 ; FOR ENTIRE SUPERMEMO
 ;;;;;;;;;;;;;;;;;;;;;;
 #if WinActive("ahk_group " . Vim.GroupName) && Vim.State.StrIsInCurrentVimMode("Visual")
-~^+i::  ; ignore
 ~^c::  ; copy
 ~^b::  ; bold
 ~^i::  ; italic
 ~^u::  ; underline
-Vim.State.SetMode("Vim_Normal")
-send {right}
+Vim.State.SetNormal()  ; this function has send {right} built in
 return
 
+~^+i::Vim.State.SetMode("Vim_Normal")  ; ignore
 v::send {home}+{end}  ; select entire line
 
 .::  ; selected text becomes [...]
@@ -74,10 +73,9 @@ send {bs}
 return
 
 y::  ; *y*ank (copy without format)
-Vim.State.SetMode("Vim_Normal")
 send ^c
+Vim.State.SetNormal()
 ClipWait 1
-send {right}
 sleep 100
 Clipboard := Clipboard
 return
@@ -120,21 +118,15 @@ send +^{home}
 return
 
 u::  ; lowercase conversion
-Vim.State.SetMode("Vim_Normal")
 ConvertLower()
-send {right}
+Vim.State.SetNormal()
 return
 
-shift & u::  ; uppercase conversion
-Vim.State.SetMode("Vim_Normal")
-ConvertUpper()
-send {right}
-return
+; +u: uppercase conversion  ; also for going up
 
 s::  ; sentence case conversion
-Vim.State.SetMode("Vim_Normal")
 ConvertSentence()
-send {right}
+Vim.State.SetNormal()
 return
 
 `::  ; cycle through cases
@@ -181,4 +173,12 @@ ControlGetFocus, currentFocus, ahk_class TElWind
 if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {
 	send !{f12}rh
 }
+return
+
+; !d: page *d*own  ; also need to enter normal mode
+
+!u::  ; page *u*p
+KeyWait alt
+MouseMove 40, 380
+send {Wheelup 2}
 return

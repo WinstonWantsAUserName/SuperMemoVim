@@ -22,6 +22,7 @@ back_to_normal = 1
 return
 
 alt::  ; for access keys
+; can't use KeyWait alt, any hotkeys that use modifier alt would trigger this script
 Vim.State.SetMode("Insert")
 send {alt}  ; cannot use tilde, because you wouldn't want other keys like alt+d to go to insert
 return
@@ -228,7 +229,7 @@ Vim.State.SetMode("Insert")
 back_to_normal = 2
 return
 
-/* PERSONAL
+; /* PERSONAL
 !f::  ; YT: pause and focus on the 2nd html component (note editing)
 KeyWait alt
 Vim.State.SetMode("Insert")
@@ -245,7 +246,7 @@ coord_x := 193 * A_ScreenDPI / 96
 coord_y := 640 * A_ScreenDPI / 96
 click %coord_x% %coord_y%
 return
-*/
+; */
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; FOR IMPORT DIALOGUE ONLY
 ;;;;;;;;;;;;;;;;;;;;;;;;;;

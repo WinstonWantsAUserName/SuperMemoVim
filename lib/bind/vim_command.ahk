@@ -142,7 +142,6 @@ send {f6}^arbs{enter}
 return
 
 g::  ; change element's concept *g*roup
-ControlGetText, currentText, TBitBtn3
 Vim.State.SetMode("Insert")
 send ^+p!g
 back_to_normal = 1
@@ -220,7 +219,7 @@ send ^a^c
 ClipWait 1
 sleep 100  ; make sure copy works
 IfInString, Clipboard, #Link: , {
-	ref_link_updated := RegExReplace(Clipboard, "\n\K#Link: .*", new_link)
+	ref_link_updated := RegExReplace(Clipboard, "(\n\K|^)#Link: .*", new_link)
 	clip(ref_link_updated)
 } else {
 	send ^{end}{enter}
@@ -234,7 +233,7 @@ if ErrorLevel {
 send ^t{esc}q^{home}{esc}  ; put caret in the start of question component unfocus every component
 return
 
-/* PERSONAL
+; /* PERSONAL
 s::  ; turn active language item to passive (*s*witch)
 Vim.State.SetMode("Vim_Normal")
 send ^t{esc}  ; de-select every component
@@ -308,7 +307,7 @@ sleep 500
 send !{f10}u  ; check autoplay
 send ^{f10}
 return
-*/
+; */
 ;;;;;;;;;;;;;;;;;
 ; FOR TASK WINDOW
 ;;;;;;;;;;;;;;;;;

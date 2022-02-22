@@ -195,6 +195,10 @@ For both normal and visual mode. Pressing any of the `1-9` keys beforehand repea
 
 ### Basic operations
 
+`alt+d`: page **d**own
+
+`alt+u`: page **u**p
+
 `x` = `backspace`
 
 `y`: copy without format (**y**ank)

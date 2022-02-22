@@ -14,12 +14,12 @@ ConvertUpper()
 {
 	clipSave := Clipboard
 	Clipboard = ; Empty the clipboard so that ClipWait has something to detect
-	SendInput, ^c ; Copies selected text
+	SendInput ^c ; Copies selected text
 	ClipWait
 	StringReplace, Clipboard, Clipboard, `r`n, `n, All ; Fix for SendInput sending Windows linebreaks 
 	StringUpper, Clipboard, Clipboard
 	Len:= Strlen(Clipboard)
-    SendInput, ^v ; Pastes new text
+    SendInput ^v ; Pastes new text
 	Send +{left %Len%}
     VarSetCapacity(clipSave, 0) ; Free memory
 	Clipboard := clipSave
@@ -29,12 +29,12 @@ ConvertLower()
 {
 	clipSave := Clipboard
 	Clipboard = ; Empty the clipboard so that ClipWait has something to detect
-	SendInput, ^c ; Copies selected text
+	SendInput ^c ; Copies selected text
 	ClipWait
 	StringReplace, Clipboard, Clipboard, `r`n, `n, All ; Fix for SendInput sending Windows linebreaks
 	StringLower, Clipboard, Clipboard
 	Len:= Strlen(Clipboard)
-    SendInput, ^v ; Pastes new text
+    SendInput ^v ; Pastes new text
 	Send +{left %Len%}
     VarSetCapacity(clipSave, 0) ; Free memory
 	Clipboard := clipSave
@@ -44,13 +44,13 @@ ConvertSentence()
 {
 	clipSave := Clipboard
 	Clipboard = ; Empty the clipboard so that ClipWait has something to detect
-	SendInput, ^c ; Copies selected text
+	SendInput ^c ; Copies selected text
 	ClipWait
 	StringReplace, Clipboard, Clipboard, `r`n, `n, All ; Fix for SendInput sending Windows linebreaks
 	StringLower, Clipboard, Clipboard
 	Clipboard := RegExReplace(Clipboard, "(((^|([.!?]+\s+))[a-z])| i | i')", "$u1")
 	Len:= Strlen(Clipboard)
-    SendInput, ^v ; Pastes new text
+    SendInput ^v ; Pastes new text
 	Send +{left %Len%}
     VarSetCapacity(clipSave, 0) ; Free memory
 	Clipboard := clipSave
@@ -60,12 +60,12 @@ ConvertMixed()
 {
 	clipSave := Clipboard
 	Clipboard = ; Empty the clipboard so that ClipWait has something to detect
-	SendInput, ^c ; Copies selected text
+	SendInput ^c ; Copies selected text
 	ClipWait
 	StringReplace, Clipboard, Clipboard, `r`n, `n, All ; Fix for SendInput sending Windows linebreaks
 	StringUpper Clipboard, Clipboard, T
 	Len:= Strlen(Clipboard)
-    SendInput, ^v ; Pastes new text
+    SendInput ^v ; Pastes new text
 	Send +{left %Len%}
     VarSetCapacity(clipSave, 0) ; Free memory
 	Clipboard := clipSave
@@ -77,12 +77,12 @@ ConvertMixed()
 ^!q::
 	clipSave := Clipboard
 	Clipboard = ; Empty the clipboard so that ClipWait has something to detect
-	SendInput, ^c ; Copies selected text
+	SendInput ^c ; Copies selected text
 	ClipWait
 	StringReplace, Clipboard, Clipboard, `r`n, `n, All ; Fix for SendInput sending Windows linebreaks
 	Clipboard := Chr(34) . Clipboard . Chr(34)
 	Len:= Strlen(Clipboard)
-    SendInput, ^v ; Pastes new text
+    SendInput ^v ; Pastes new text
 	Send +{left %Len%}
     VarSetCapacity(clipSave, 0) ; Free memory
 	Clipboard := clipSave

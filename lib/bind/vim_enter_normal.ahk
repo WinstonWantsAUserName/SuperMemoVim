@@ -14,9 +14,33 @@ if WinActive("ahk_class TElWind") && !(Vim.State.StrIsInCurrentVimMode("Insert")
 	KeyWait ctrl
 	Vim.State.SetNormal()
 	send {alt}{l 2}  ; to avoid weird IE window
+	return
 } else if WinActive("ahk_group " . Vim.GroupName) && (Vim.State.StrIsInCurrentVimMode("Insert")) {
 	send {del}
+	return
 }
+send ^l
+return
+
++u::  ; go up
+if Vim.State.StrIsInCurrentVimMode("Visual") {
+	ConvertUpper()
+	Vim.State.SetNormal()
+	return
+} else if WinActive("ahk_class TElWind") || WinActive("ahk_class TContents") {
+	if (Vim.State.Mode == "Vim_Normal") {
+		send ^{up}
+		return
+	} else if !WinActive("ahk_class TContents") {  ; in content window, it only works in normal mode
+		ControlGetFocus, currentFocus, ahk_class TElWind
+		if (currentFocus != "Internet Explorer_Server2" && currentFocus != "Internet Explorer_Server1" && currentFocus != "TMemo2" && currentFocus != "TMemo1") {  ; not editing text
+			Vim.State.SetNormal()
+			send ^{up}  ; so it works even in element window and in insert mode when not editing text
+			return
+		}
+	}
+}
+send +u
 return
 
 enter::
@@ -68,7 +92,7 @@ if (Vim.State.Mode == "Vim_Normal") {
 	ControlGetFocus, currentFocus, ahk_class TElWind
 	if (currentFocus != "Internet Explorer_Server2" && currentFocus != "Internet Explorer_Server1" && currentFocus != "TMemo2" && currentFocus != "TMemo1") {  ; not editing text
 		Vim.State.SetNormal()
-		send !{left}  ; so it works even in insert mode when not editing text
+		send !{left}   ; so it works even in element window and in insert mode when not editing text
 		return
 	}
 }
@@ -83,27 +107,15 @@ if (Vim.State.Mode == "Vim_Normal") {
 	ControlGetFocus, currentFocus, ahk_class TElWind
 	if (currentFocus != "Internet Explorer_Server2" && currentFocus != "Internet Explorer_Server1" && currentFocus != "TMemo2" && currentFocus != "TMemo1") {  ; not editing text
 		Vim.State.SetNormal()
-		send !{right}  ; so it works even in insert mode when not editing text
+		send !{right}  ; so it works even in element window and in insert mode when not editing text
 		return
 	}
 }
 send +l
 return
 
-+u::  ; go up
-if (Vim.State.Mode == "Vim_Normal") {
-	send ^{up}
-	return
-} else if !WinActive("ahk_class TContents") {  ; in content window, it only works in normal mode
-	ControlGetFocus, currentFocus, ahk_class TElWind
-	if (currentFocus != "Internet Explorer_Server2" && currentFocus != "Internet Explorer_Server1" && currentFocus != "TMemo2" && currentFocus != "TMemo1") {  ; not editing text
-		Vim.State.SetNormal()
-		send ^{up}  ; so it works even in insert mode when not editing text
-		return
-	}
-}
-send +u
-return
+; +u: go up  ; see above (also for uppercase conversion in visual mode)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ; FOR ELEMENT WINDOW ONLY
 ;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -179,13 +191,23 @@ return
 ~!x::  ; extract
 ~!z::  ; cloze
 ~^n::  ; paste new topic
-~!d::  ; duplicate
 ~^p::  ; plan
 ~!t::  ; set title
 Vim.State.SetNormal()
 return
 
-/* PERSONAL
+!d::  ; duplicate
+if Vim.State.StrIsInCurrentVimMode("Visual") {
+	KeyWait alt
+	MouseMove 40, 380
+	send {Wheeldown 2}
+} else {
+	send !d
+	Vim.State.SetNormal()
+}
+return
+
+; /* PERSONAL
 ^!m::  ; YT: set start point
 Vim.State.SetNormal()
 coord_x := 83 * A_ScreenDPI / 96
@@ -198,7 +220,7 @@ return
 Vim.State.SetNormal()
 send ^{t 2}{f9}
 return
-*/
+; */
 ;;;;;;;;;;;;;;;
 ; OTHER WINDOWS
 ;;;;;;;;;;;;;;;
