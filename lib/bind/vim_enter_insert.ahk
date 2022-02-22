@@ -206,8 +206,9 @@ Vim.State.SetMode("Insert")
 send ^m
 back_to_normal = 1
 return
-
+;;;;;;;;;;;;;;;;;;;;;;;;;
 ; FOR ELEMENT WINDOW ONLY
+;;;;;;;;;;;;;;;;;;;;;;;;;
 #if WinActive("ahk_class TElWind")
 ~^o::  ; switch collection
 ~f6::  ; format
@@ -228,25 +229,6 @@ return
 Vim.State.SetMode("Insert")
 back_to_normal = 2
 return
-
-; /* PERSONAL
-!f::  ; YT: pause and focus on the 2nd html component (note editing)
-KeyWait alt
-Vim.State.SetMode("Insert")
-coord_x := 74 * A_ScreenDPI / 96
-coord_y := 628 * A_ScreenDPI / 96
-click %coord_x% %coord_y%
-send ^{t 2}
-return
-
-!y::  ; YT: focus onto 1st html component (YT video)
-KeyWait alt
-Vim.State.SetMode("Insert")
-coord_x := 193 * A_ScreenDPI / 96
-coord_y := 640 * A_ScreenDPI / 96
-click %coord_x% %coord_y%
-return
-; */
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; FOR IMPORT DIALOGUE ONLY
 ;;;;;;;;;;;;;;;;;;;;;;;;;;

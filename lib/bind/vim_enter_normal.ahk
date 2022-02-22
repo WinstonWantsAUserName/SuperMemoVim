@@ -207,20 +207,11 @@ if Vim.State.StrIsInCurrentVimMode("Visual") {
 }
 return
 
-; /* PERSONAL
-^!m::  ; YT: set start point
-Vim.State.SetNormal()
-coord_x := 83 * A_ScreenDPI / 96
-coord_y := 708 * A_ScreenDPI / 96
-click %coord_x% %coord_y%
-return
-
 >!.::  ; for laptop
 >!,::  ; play video in default system player / edit script component
 Vim.State.SetNormal()
 send ^{t 2}{f9}
 return
-; */
 ;;;;;;;;;;;;;;;
 ; OTHER WINDOWS
 ;;;;;;;;;;;;;;;
@@ -242,7 +233,7 @@ if ErrorLevel {
 replacement := RegExReplace(UserInput, "^!")  ; remove the "!"
 if (replacement != UserInput) {  ; you entered an "!"
 	split = 0
-	UserInput = %replacement%
+	UserInput := replacement
 } else {
 	split = 1
 }
@@ -262,6 +253,8 @@ if (UserInput = "b") {  ; shortcuts
 	UserInput = Family
 } else if (UserInput = "p") {
 	UserInput = Passive
+} else if (UserInput = "m") {
+	UserInput = Meal
 }
 if (split = 1) {
 	send ^t  ; split

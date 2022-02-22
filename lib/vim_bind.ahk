@@ -10,3 +10,4 @@
 #Include %A_LineFile%\..\bind\Convert Case (Cycle).ahk
 #Include %A_LineFile%\..\bind\vim_repeat.ahk
 #Include %A_LineFile%\..\bind\extra.ahk
+#Include %A_LineFile%\..\bind\personal.ahk

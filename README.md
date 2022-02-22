@@ -2,9 +2,11 @@ Huge thanks to MasterHowToLearn, who wrote the [original SuperMemoVim](https://g
 
 # SuperMemoVim: The keyboard SuperMemo experience
 
-Disclaimer: I have been simultaneously developing and using this script for 1.5 months. Nothing happened to my collection so far, but I can't guarantee the same thing for the future. Please make sure you have proper backup strategy in place.
+Disclaimer: I have been simultaneously developing and using this script since January 2022. Nothing happened to my collection so far, but I can't guarantee the same thing for the future. Please make sure you have proper backup strategy in place.
 
 You need AutoHotkey for this. Double click SuperMemoVim.ahk, and you shall see a new icon popping up on your taskbar.
+
+Please add your scripts in lib\\bind\\personal.ahk so you can update easily. See the comments in the file for tips for writing your own scripts.
 
 # Modes
 
@@ -262,6 +264,8 @@ ctrl+m is remapped to `ctrl+shift+alt+m`, and ctrl+shift+j is remapped to `ctrl+
 `ctrl+alt+s`: go to **s**ource (works differently for element window / browser)
 
 `ctrl+alt+.`: go to end of `[...]` and enter insert mode
+
+`right alt + .`, `right alt + ,`: in local video elements, open the video in default video player (= `ctrl+t` \* 2 (navigate to video component) -> `f9`)
 
 `right alt + right shift + backspace`, `right ctrl + right shift + backspace`: delete element and keep learning (similar to anki)
 
