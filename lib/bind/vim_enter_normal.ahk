@@ -16,6 +16,7 @@ if WinActive("ahk_class TElWind") && !(Vim.State.StrIsInCurrentVimMode("Insert")
 	send {alt}{l 2}  ; to avoid weird IE window
 	return
 } else if WinActive("ahk_group " . Vim.GroupName) && (Vim.State.StrIsInCurrentVimMode("Insert")) {
+	KeyWait ctrl
 	send {del}
 	return
 }
@@ -172,6 +173,7 @@ return
 ^!k::
 ControlGetFocus, currentFocus, ahk_class TElWind
 if Vim.State.StrIsInCurrentVimMode("Insert") && (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; in insert mode and editing html
+	KeyWait ctrl
 	send {home}{enter}{up}  ; force new line above current line
 } else {
 	Vim.State.SetNormal()

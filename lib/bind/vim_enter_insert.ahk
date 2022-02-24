@@ -40,6 +40,7 @@ return
 
 ^j::  ; change interval
 if Vim.State.StrIsInCurrentVimMode("Insert") {  ; new line below current paragraph in insert mode
+	KeyWait ctrl
 	ControlGetFocus, currentFocus, ahk_class TElWind
 	if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; editing html
 		send ^{down}{left}{enter}

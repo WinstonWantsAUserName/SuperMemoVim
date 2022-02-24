@@ -49,7 +49,6 @@ class VimAhk{
     ; Enable vim mode for following applications
     this.Group :=  "ahk_exe sm18.exe", "ahk_exe sm17.exe", "ahk_exe sm16.exe", "ahk_exe sm15.exe"
 
-
     ; Configuration values for Read/Write ini
     this.Conf := {VimRestoreIME: {default: 0, val: 0
         , description: "Restore IME status at entering Insert mode:"
