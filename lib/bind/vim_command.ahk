@@ -217,7 +217,7 @@ send !{f10}fe
 WinWaitActive, ahk_class TInputDlg,, 0
 send ^a^c
 ClipWait 1
-sleep 100  ; make sure copy works
+sleep 100  ; making sure copy works
 IfInString, Clipboard, #Link: , {
 	ref_link_updated := RegExReplace(Clipboard, "(\n\K|^)#Link: .*", new_link)
 	clip(ref_link_updated)
@@ -227,10 +227,11 @@ IfInString, Clipboard, #Link: , {
 }
 send !{enter}
 WinWaitActive, ahk_class TELWind,, 0
-if ErrorLevel {
-	return
+if !ErrorLevel {
+	send ^t{esc}q
+	sleep 50
+	send ^{home}{esc}  ; put caret in the start of question component and unfocus every component
 }
-send ^t{esc}q^{home}{esc}  ; put caret in the start of question component unfocus every component
 return
 ;;;;;;;;;;;;;;;;;
 ; FOR TASK WINDOW

@@ -2,7 +2,7 @@
 ; FOR ENTIRE SUPERMEMO
 ;;;;;;;;;;;;;;;;;;;;;;
 #if WinActive("ahk_group " . Vim.GroupName)
-ctrl::Vim.State.SetNormal()
+ctrl::Vim.State.SetNormal()  ; ctrl: always go to normal mode
 
 ~esc::
 back_to_normal = 0
@@ -224,6 +224,8 @@ return
 ; FOR PLAN WINDOW ONLY
 ;;;;;;;;;;;;;;;;;;;;;;
 #if WinActive("ahk_class TPlanDlg")
+~^s::Vim.State.SetMode("Vim_Normal")
+
 !a::  ; insert the accident activity
 Vim.State.SetMode("Vim_Normal")
 InputBox, UserInput, Accident activity, Please enter the name of the activity. Add ! at the beginning if you don't want to split the current activity., , 256, 164
@@ -255,6 +257,10 @@ if (UserInput = "b") {  ; shortcuts
 	UserInput = Passive
 } else if (UserInput = "m") {
 	UserInput = Meal
+} else if (UserInput = "r") {
+	UserInput = Rest
+} else if (UserInput = "h") {
+	UserInput = School
 }
 if (split = 1) {
 	send ^t  ; split

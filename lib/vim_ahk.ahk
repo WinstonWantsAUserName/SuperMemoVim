@@ -1,24 +1,23 @@
 ﻿; Utilities
-#Include %A_LineFile%\..\util\vim_ahk_setting.ahk
-#Include %A_LineFile%\..\util\vim_ime.ahk
-#Include %A_LineFile%\..\util\Clip.ahk
+#include %A_LineFile%\..\util\vim_ahk_setting.ahk
+#include %A_LineFile%\..\util\vim_ime.ahk
+#include %A_LineFile%\..\util\Clip.ahk
+#include %A_LineFile%\..\util\Convert Case (Cycle).ahk
 
 ; Classes, Functions
-#Include %A_LineFile%\..\vim_about.ahk
-#Include %A_LineFile%\..\vim_check.ahk
-#Include %A_LineFile%\..\vim_gui.ahk
-#Include %A_LineFile%\..\vim_icon.ahk
-#Include %A_LineFile%\..\vim_ini.ahk
-#Include %A_LineFile%\..\vim_menu.ahk
-#Include %A_LineFile%\..\vim_move.ahk
-#Include %A_LineFile%\..\vim_setting.ahk
-#Include %A_LineFile%\..\vim_state.ahk
-#Include %A_LineFile%\..\vim_tooltip.ahk
-
-
+#include %A_LineFile%\..\vim_about.ahk
+#include %A_LineFile%\..\vim_check.ahk
+#include %A_LineFile%\..\vim_gui.ahk
+#include %A_LineFile%\..\vim_icon.ahk
+#include %A_LineFile%\..\vim_ini.ahk
+#include %A_LineFile%\..\vim_menu.ahk
+#include %A_LineFile%\..\vim_move.ahk
+#include %A_LineFile%\..\vim_setting.ahk
+#include %A_LineFile%\..\vim_state.ahk
+#include %A_LineFile%\..\vim_tooltip.ahk
 
 ; Key Bindings
-#Include %A_LineFile%\..\vim_bind.ahk
+#include %A_LineFile%\..\vim_bind.ahk
 
 class VimAhk{
   __About() {

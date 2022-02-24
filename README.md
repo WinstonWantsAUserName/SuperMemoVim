@@ -56,6 +56,8 @@ For both normal and visual mode. Pressing any of the `1-9` keys beforehand repea
 
 `shift+k`: up 5 times
 
+`[1-9]->g`: go to xth line (e.g. press 4 followed by g goes to the 4th line)
+
 ### Left/right
 
 `0`: go to start of line (= `home`)
@@ -94,11 +96,11 @@ For both normal and visual mode. Pressing any of the `1-9` keys beforehand repea
 
 `shift+d`: **d**elete everything from caret to end of paragraph (`alt+shift+d` for end of line)
 
-`p`: paste without format
+`p`: **p**aste without format
 
-`shift+p`: paste with format (= `ctrl+v`)
+`shift+p`: **p**aste with format (= `ctrl+v`)
 
-`shift+y`: yank (copy) current paragraph
+`shift+y`: **y**ank (copy) current paragraph (`alt+shift+y` for current line)
 
 ### SuperMemo functions
 

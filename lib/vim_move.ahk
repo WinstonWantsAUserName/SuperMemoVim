@@ -71,8 +71,6 @@
         } else {
           send {up 5}
         }
-    } else if (key == "g") {
-		send ^{home}
     } else if (key == "+g") {
         if (shift == 1) {
           send +^{end}
@@ -108,6 +106,7 @@
     this.Vim.State.SetMode("", 0, 0)
   }
   Repeat(key="") {
+	repeat = 0
     if (this.Vim.State.n == 0) {
       this.Vim.State.n := 1
     }

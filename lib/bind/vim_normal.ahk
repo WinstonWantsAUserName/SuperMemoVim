@@ -10,8 +10,24 @@ send {del}
 return
 
 +x::send {bs}  ; OG: same as backspace
-+p::send ^v  ; SEMI-OG: paste with format
-+y::send {home}+{end}^c{right}  ; OG: yank (copy) current line
+
++y::  ; OG: *y*ank (copy) current paragraph
+ControlGetFocus, currentFocus, ahk_class TElWind
+if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; editing html
+	send ^{down}^+{up}^c{right}
+} else {
+	send {home}+{end}^c{right}
+}
+return
+
++!y::  ; force yank current line when editing html
+ControlGetFocus, currentFocus, ahk_class TElWind
+if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; editing html
+	send {home}+{end}^c{right}
+} else {
+	send +!y
+}
+return
 
 +d::  ; OG: *d*elete everything from caret to end of paragraph
 ControlGetFocus, currentFocus, ahk_class TElWind
@@ -30,6 +46,8 @@ if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explo
 	send !+d
 }
 return
+
++p::send ^v  ; SEMI-OG: paste with format
 
 p::  ; SEMI-OG: paste without format
 if dialogueWindow() {
@@ -56,22 +74,24 @@ send {Wheelup 2}
 return
 
 !j::  ; wheel down
+KeyWait alt
 WinActivate ahk_class TElWind
 MouseMove 40, 380
-KeyWait alt
 send {Wheeldown}
 return
 
 !k::  ; wheel up
+KeyWait alt
 WinActivate ahk_class TElWind
 MouseMove 40, 380
-KeyWait alt
 send {Wheelup}
 return
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; FOR ELEMENT WINDOW / CONTENT WINDOW
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #if (WinActive("ahk_class TElWind") || WinActive("ahk_class TContents")) && Vim.State.Mode == "Vim_Normal"
+c::send !c  ; content window
+
 b::  ; browser
 if WinActive("ahk_class TElWind") {
 	ControlGetFocus, currentFocus, ahk_class TElWind
@@ -88,8 +108,6 @@ send !{home}
 sleep 100
 send !{left}
 return
-
-c::send !c  ; content window
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ; FOR ELEMENT WINDOW ONLY
 ;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -216,6 +234,16 @@ if (currentFocus = "TBitBtn4" || currentFocus = "TBitBtn5" || currentFocus = "TB
 	send 5
 	sleep 40
 	send {space}  ; next item
+	return
+}
+if (repeat = 1) {
+	repeat = 0
+	n_repeat -= 1
+	Vim.State.SetMode("", 0, n_repeat)
+	send ^{home}
+	if (n_repeat > 0) {
+		Vim.Move.Repeat("j")  ; go down x lines
+	}
 	return
 }
 if (A_PriorHotkey != "g" or A_TimeSincePriorHotkey > 400) {  ; Too much time between presses, so this isn't a double-press.

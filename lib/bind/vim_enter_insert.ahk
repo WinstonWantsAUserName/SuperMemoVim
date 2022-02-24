@@ -9,7 +9,7 @@ return
 ; FOR ENTIRE SUPERMEMO
 ;;;;;;;;;;;;;;;;;;;;;;
 #if WinActive("ahk_group " . Vim.GroupName)
-shift::  ; shift: go to insert mode
+shift::  ; shift: always go to insert mode
 ~AppsKey::  ; menu key
 ~RButton::  ; right click
 Vim.State.SetMode("Insert")

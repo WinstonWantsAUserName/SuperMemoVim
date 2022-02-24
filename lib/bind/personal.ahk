@@ -1,8 +1,38 @@
 ﻿; putting your scripts in this file makes it easier for updating smvim
-; it's good to devide your file into sections, with each one headed by a #if WinActive statement
-; make sure you at least have:
-; #if WinActive("ahk_group " . Vim.GroupName)
-; which is for entire supermemo
+; this file is on top in lib\vim_bind.ahk, so what you have in this file will overwrite all other bindings
+
+; but make sure to do this to avoid duplication detection:
+
+; autohotkey detects duplicates using conditions (the #if line above scripts)
+; therefore, if you want to remap, always add a "&& true"
+; so the conditions are considered different in the eyes of autohotkey
+
+; examples:
+; tilde means sending the key itself (see more in ahk documents)
+; remove the /* below to enable the following scripts
+/*
+#if WinActive("ahk_group " . Vim.GroupName) && true
+~e::  ; disabling smvim's e everywhere
+return
+
+#if WinActive("ahk_class TPlanDlg") && true
+~j::  ; disabling smvim's j in Plan window
+~k::  ; disabling smvim's k in Plan window
+return
+
+#if WinActive("ahk_group " . Vim.GroupName) && true
+~^m::  ; enabling ctrl+m everywhere
+^+!m::  ; disabling smvim's remapping of ctrl+m
+return
+
+#if WinActive("ahk_group " . Vim.GroupName) && Vim.State.Mode == "Vim_Normal" && true
+p::  ; rewriting p in normal mode
+send ^v
+sleep 600
+send ^z
+MsgBox Pranked!
+return
+*/
 
 ; if you have any issues writing your own scripts, don't hesitate to find me in supermemo.wiki discord: https://discord.com/invite/vUQhqCT
 ; my name there is Winston#1395, with an avatar of a meditating cat

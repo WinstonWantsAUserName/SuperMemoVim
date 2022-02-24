@@ -9,4 +9,5 @@ Return
 
 #Include %A_LineFile%\..\lib\vim_ahk.ahk
 
+#if WinActive("ahk_class Notepad++") || WinActive("ahk_group " . Vim.GroupName)
 ^!r::Reload

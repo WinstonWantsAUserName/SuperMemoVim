@@ -45,6 +45,9 @@ return
 ;;;;;;;;;;;;;;;;;;;;;;
 #if WinActive("ahk_group " . Vim.GroupName) && Vim.State.StrIsInCurrentVimMode("Visual")
 ~^c::  ; copy
+Vim.State.SetMode("Vim_Normal")
+return
+
 ~^b::  ; bold
 ~^i::  ; italic
 ~^u::  ; underline

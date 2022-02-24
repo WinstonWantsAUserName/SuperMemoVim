@@ -7,7 +7,6 @@
 Vim.Move.Repeat(A_ThisHotkey)
 return
 
-; SINGLE KEY
 h::
 j::
 k::
