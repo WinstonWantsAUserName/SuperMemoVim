@@ -11,7 +11,6 @@ return
 shift::  ; shift: always go to insert mode
 ~AppsKey::  ; menu key
 ~RButton::  ; right click
-~^+a::  ; select all: differs from ^a (which enters visual), this one enters insert
 Vim.State.SetMode("Insert")
 return
 
@@ -19,6 +18,11 @@ return
 ~^r::  ; replace
 Vim.State.SetMode("Insert")
 back_to_normal = 1
+return
+
+^!a::  ; select all: differs from ^a (which enters visual), this one enters insert
+send ^a
+Vim.State.SetMode("Insert")
 return
 
 alt::  ; for access keys
