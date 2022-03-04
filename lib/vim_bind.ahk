@@ -1,12 +1,11 @@
 #include %A_LineFile%\..\bind\personal.ahk
+#include %A_LineFile%\..\bind\vim_move.ahk
 #include %A_LineFile%\..\bind\vim_enter_normal.ahk
 #include %A_LineFile%\..\bind\vim_enter_insert.ahk
 #include %A_LineFile%\..\bind\vim_normal.ahk
 #include %A_LineFile%\..\bind\vim_insert.ahk
-#include %A_LineFile%\..\bind\vim_move.ahk
 #include %A_LineFile%\..\bind\vim_visual.ahk
 #include %A_LineFile%\..\bind\vim_disable.ahk
 #include %A_LineFile%\..\bind\disable_dangerous_sm_combo.ahk
 #include %A_LineFile%\..\bind\vim_command.ahk
 #include %A_LineFile%\..\bind\vim_repeat.ahk
-#include %A_LineFile%\..\bind\extra.ahk

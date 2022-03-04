@@ -45,33 +45,29 @@ return
 #if WinActive("ahk_class TElWind")
 ^!m::  ; YT: set start point
 Vim.State.SetNormal()
-coord_x := 83 * A_ScreenDPI / 96
-coord_y := 708 * A_ScreenDPI / 96
-click %coord_x% %coord_y%
+if A_ScreenDPI = 96
+	click 83 708
 return
 
 !f::  ; YT: pause and focus on the 2nd html component (note editing)
 KeyWait alt
 Vim.State.SetMode("Insert")
-coord_x := 74 * A_ScreenDPI / 96
-coord_y := 628 * A_ScreenDPI / 96
-click %coord_x% %coord_y%
+if A_ScreenDPI = 96
+	click 74 628
 send ^{t 2}
 return
 
 !y::  ; YT: focus onto 1st html component (YT video)
 KeyWait alt
 Vim.State.SetMode("Insert")
-coord_x := 193 * A_ScreenDPI / 96
-coord_y := 640 * A_ScreenDPI / 96
-click %coord_x% %coord_y%
+if A_ScreenDPI = 96
+	click 193 640
 return
 
 ^!+y::  ; YT: close "More videos"
 Vim.State.SetMode("Insert")
-coord_x := 907 * A_ScreenDPI / 96
-coord_y := 460 * A_ScreenDPI / 96
-click %coord_x% %coord_y%
+if A_ScreenDPI = 96
+	click 907 460
 send ^{t 2}
 return
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -82,12 +78,13 @@ s::  ; turn active language item to passive (*s*witch)
 Vim.State.SetMode("Vim_Normal")
 send ^t{esc}  ; de-select every component
 ControlGetText, currentText, TBitBtn3
-if (currentText != "Learn") {  ; if learning
+if (currentText != "Learn")  ; if learning
 	send {esc}
-}
 send ^+s
-sleep 350  ; delay to make sure the switch works
-send qen:{space}{tab}
+sleep 450  ; delay to make sure the switch works; also to update the title
+send q
+sleep 10
+send en:{space}{tab}
 sleep 150
 send ^{del 2}{esc}
 return
@@ -118,9 +115,8 @@ ControlGetText, currentText, TBitBtn3
 if (currentText = "Next repetition") {
 	continue_learning = 1
 	send !{f10}u
-} else {
+} else
 	continue_learning = 0
-}
 send ^+p
 send ^a
 send audio{enter}

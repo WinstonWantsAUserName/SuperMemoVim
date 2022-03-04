@@ -7,16 +7,14 @@
 		; when you change the reference of an element that shares the reference with other elements
 		; no shortcuts there, so movement keys are used for up/down navigation
 		; if more windows are found without shortcuts in the future, they will be all added here
-		if (currentText1 = "Cancel (i.e. restore the old version of references)") || (currentText2 = "Combine old and new references for this element") || (currentText3 = "Change references in all elements produced from the original article") || (currentText4 = "Change only the references of the currently displayed element") {
+		if (currentText1 = "Cancel (i.e. restore the old version of references)") || (currentText2 = "Combine old and new references for this element") || (currentText3 = "Change references in all elements produced from the original article") || (currentText4 = "Change only the references of the currently displayed element")
 			return true  ; use movement keys
-		}
 	}
 }
 
 dialogueWindow() {
-	if exceptionDialogueWindow() {
+	if exceptionDialogueWindow()
 		return false  ; use movement keys
-	}
 	if WinActive("ahk_class TMsgDialog") || WinActive("ahk_class TChoicesDlg") || WinActive("ahk_class TChecksDlg") {  ; dialogue windows
 		send {%A_ThisHotkey%}
 		return true
@@ -24,13 +22,27 @@ dialogueWindow() {
 }
 
 gradingAndDialogueWindow() {
-	if exceptionDialogueWindow() {
+	if exceptionDialogueWindow()
 		return false  ; use movement keys
-	}
 	; grading buttons and dialogue windows
-	ControlGetFocus, currentFocus, ahk_class TElWind
+	ControlGetFocus currentFocus, ahk_class TElWind
 	if (currentFocus = "TBitBtn4" || currentFocus = "TBitBtn5" || currentFocus = "TBitBtn6" || currentFocus = "TBitBtn7" || currentFocus = "TBitBtn8" || currentFocus = "TBitBtn9" || WinActive("ahk_class TMsgDialog") || WinActive("ahk_class TChoicesDlg") || WinActive("ahk_class TChecksDlg")) {
 		send {%A_ThisHotkey%}
 		return true
 	}
 }
+
+SMToolTip(text="", ToP="t", period:=-1000) {
+	CoordMode ToolTip, Screen
+	coord_x := A_ScreenWidth / 2
+	coord_y := A_ScreenHeight / 3 * 2
+	ToolTip %text%, %coord_x%, %coord_y%
+	if (ToP == "t")
+		SetTimer RemoveToolTip, %period%
+	else if (ToP == "p")
+		SetTimer RemoveToolTip, off
+}
+
+RemoveToolTip:
+ToolTip
+return

@@ -43,6 +43,7 @@
   }
 
   SetMode(Mode="", g=0, n=0, LineCopy=-1) {
+	previous_mode := this.Mode
     this.CheckValidMode(Mode)
     if (Mode != "") {
       this.Mode := Mode
@@ -61,6 +62,8 @@
       this.LineCopy := LineCopy
     }
     this.CheckMode(this.Vim.Conf["VimVerbose"]["val"], Mode, g, n, LineCopy)
+	if g = 0 || n = 0
+		ToolTip
   }
 
   SetNormal() {
@@ -72,9 +75,8 @@
         VIM_IME_SET()
       }
     }
-    if this.StrIsInCurrentVimMode("Visual") {
-      send {right}
-    }
+    if this.StrIsInCurrentVimMode("Visual")
+	  send {right}
     this.SetMode("Vim_Normal")
   }
 
@@ -92,7 +94,7 @@
     if (this.CheckModeValue == false) {
       return
     }
-    try{
+    try {
       InOrBlank:= (not full_match) ? "in " : ""
       if not this.HasValue(this.PossibleVimModes, Mode, FullMatch) {
         throw Exception("Invalid mode specified",-2,
@@ -103,24 +105,24 @@
    or adding your mode to the array.")
         )
       }
-    }catch e{
+    } catch e {
       MsgBox % "Warning: " e.Message "`n" e.Extra "`n`n Called in " e.What " at line " e.Line
     }
   }
 
   HasValue(haystack, needle, full_match = true) {
-    if (!isObject(haystack)) {
+    if !isObject(haystack) {
       return false
     } else if (haystack.Length()==0) {
       return false
     }
     for index, value in haystack{
-      if full_match{
+      if full_match {
         if (value==needle) {
           return true
         }
       } else {
-        if (inStr(value, needle)) {
+        if inStr(value, needle) {
           return true
         }
       }
@@ -130,17 +132,20 @@
 
   StatusCheck() {
     if WinActive("ahk_group " this.Vim.GroupName) {
-      this.Vim.Icon.SetIcon(this.Mode, this.Vim.Conf["VimIconCheckInterval"]["val"])
-    } else {
-      this.Vim.Icon.SetIcon("Disabled", this.Vim.Conf["VimIconCheckInterval"]["val"])
-    }
+	  this.Vim.Icon.SetIcon(this.Mode, this.Vim.Conf["VimIconCheckInterval"]["val"])
+	  if this.Vim.State.g
+		SMToolTip("g",, -300)
+	  else if this.Vim.State.n > 0
+	    SMToolTip(this.Vim.State.n,, -300)
+    } else
+	  this.Vim.Icon.SetIcon("Disabled", this.Vim.Conf["VimIconCheckInterval"]["val"])
   }
 
   SetStatusCheck() {
     check := this.StatusCheckObj
-    if (this.Vim.Conf["VimIconCheckInterval"]["val"] > 0) {
+    if (this.Vim.Conf["VimIconCheckInterval"]["val"] > 0)
       SetTimer, % check, % this.Vim.Conf["VimIconCheckInterval"]["val"]
-    } else {
+    else {
       this.Vim.Icon.SetIcon("", 0)
       SetTimer, % check, Off
     }

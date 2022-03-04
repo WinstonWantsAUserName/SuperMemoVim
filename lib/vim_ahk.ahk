@@ -3,6 +3,7 @@
 #include %A_LineFile%\..\util\vim_ime.ahk
 #include %A_LineFile%\..\util\Clip.ahk
 #include %A_LineFile%\..\util\Convert Case (Cycle).ahk
+#include %A_LineFile%\..\util\functions.ahk
 
 ; Classes, Functions
 #include %A_LineFile%\..\vim_about.ahk
@@ -21,11 +22,9 @@
 
 class VimAhk{
   __About() {
-    this.About.Version := "v0.0.2"
-    this.About.Date := "28/Nov/2020"
-    this.About.Author := "Modified by: MasterHowToLearn. Made by: rcmdnk. Thank you!"
-    this.About.Description := "Vim emulation with AutoHotkey for SuperMemo, the best learning software in the world."
-    this.About.Homepage := "https://github.com/MasterHowToLearn/SuperMemoVim"
+    this.About.Author := "Modified by: Winston. Made by: rcmdnk and MasterHowToLearn."
+    this.About.Description := "An AHK script to create the ultimate keyboard SuperMemo experience."
+    this.About.Homepage := "https://github.com/WinstonWantsAUserName/SuperMemoVim"
     this.Info["VimHomepage"] := this.About.Homepage
   }
 

@@ -21,7 +21,7 @@ Vim.State.SetMode("Command")
 return
 
 #if WinActive("ahk_group " . Vim.GroupName) && Vim.State.StrIsInCurrentVimMode("Insert")
-^`;::Vim.State.SetMode("Command")
+!`;::Vim.State.SetMode("Command")
 ;;;;;;;;;;;;;;;;;;;;;;
 ; FOR ENTIRE SUPERMEMO
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -34,16 +34,7 @@ return
 ; FOR ELEMENT WINDOW / CONTENT WINDOW / BROWSER
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #if (WinActive("ahk_class TElWind") || WinActive("ahk_class TContents") || WinActive("ahk_class TBrowser")) && Vim.State.Mode == "Command"
-c::  ; change default *c*oncept group
-Vim.State.SetMode("Insert")
-WinActivate ahk_class TElWind
-coord_x := 724 * A_ScreenDPI / 96
-coord_y := 68 * A_ScreenDPI / 96
-click %coord_x% %coord_y%
-back_to_normal = 1
-return
-
-+c::  ; add new concept
+c::  ; add new concept
 Vim.State.SetMode("Insert")
 WinActivate ahk_class TElWind
 send {alt}er
@@ -121,30 +112,22 @@ return
 b::  ; remove all text *b*efore cursor
 Vim.State.SetMode("Vim_Normal")
 send !\\
-WinWaitActive, ahk_class TMsgDialog,, 0
-if !ErrorLevel {
+WinWaitActive ahk_class TMsgDialog,, 0
+if !ErrorLevel
 	send {enter}
-}
 return
 
 a::  ; remove all text *a*fter cursor
 Vim.State.SetMode("Vim_Normal")
 send !.
-WinWaitActive, ahk_class TMsgDialog,, 0
-if !ErrorLevel {
+WinWaitActive ahk_class TMsgDialog,, 0
+if !ErrorLevel
 	send {enter}
-}
 return
 
 f::  ; clean *f*ormat: using f6 (retaining tables)
 Vim.State.SetMode("Vim_Normal")
 send {f6}^arbs{enter}
-return
-
-g::  ; change element's concept *g*roup
-Vim.State.SetMode("Insert")
-send ^+p!g
-back_to_normal = 1
 return
 
 l::  ; *l*ink concept
@@ -155,30 +138,32 @@ return
 
 w::  ; prepare *w*ikipedia articles in languages other than English
 Vim.State.SetMode("Vim_Normal")
+clipSave := Clipboardall
+Clipboard =
 send !{f10}fs  ; show reference
-WinWaitActive, ahk_class TMsgDialog,, 0
+WinWaitActive ahk_class TMsgDialog,, 0
 send p{esc}  ; copy reference
-IfNotInString, Clipboard, wikipedia.org/wiki, {
-	MsgBox not wikipedia!
+IfNotInString Clipboard, wikipedia.org/wiki, {
+	MsgBox Not wikipedia!
 	return
 }
-IfInString, Clipboard, en.wikipedia.org, {
+IfInString Clipboard, en.wikipedia.org, {
 	MsgBox English wikipedia doesn't need to be prepared!
 	return
 }
 RegExMatch(Clipboard, "(?<=Link: https:\/\/)(.*?)(?=\/wiki\/)", wiki_link)
 send ^t{esc}  ; de-select all components
+sleep 50
 send ^+{f6}
-WinWaitActive, ahk_exe notepad.exe,, 2
-if ErrorLevel {
+WinWaitActive ahk_exe notepad.exe,, 2
+if ErrorLevel
 	return
-}
 send ^h  ; replace
-WinWaitActive, Replace,, 0
-Clip("en.wikipedia.org")  ; supermemo for some reason replaces the links for English wikipedia ones
+WinWaitActive Replace,, 0
+SendInput {raw}en.wikipedia.org  ; supermemo for some reason replaces the links for English wikipedia ones
 send {tab}
 sleep 50
-Clip(wiki_link)  ; so this script replaces them back
+SendInput {raw}%wiki_link%  ; so this script replaces them back
 sleep 50
 send !a
 sleep 200
@@ -186,16 +171,15 @@ send ^s
 sleep 200
 send ^w
 if (wiki_link = "zh.wikipedia.org") {
-	WinWaitActive, ahk_class TElWind,, 0
+	WinWaitActive ahk_class TElWind,, 0
 	send ^t
 	sleep 200
-	send ^{home}+{end}
-	send +{left 2}+{right}
-	send !t
-	WinWaitActive, ahk_class TChoicesDlg,, 2
+	send ^{home}{end}+{home}!t
+	WinWaitActive ahk_class TChoicesDlg,, 2
 	send 2{enter}
 	send {esc}
 }
+Clipboard := clipSave
 return
 
 i::  ; learn outstanding *i*tems only
@@ -214,11 +198,11 @@ r::  ; set *r*eference's link to what's in the clipboard
 Vim.State.SetMode("Vim_Normal")
 new_link = #Link: %Clipboard%
 send !{f10}fe
-WinWaitActive, ahk_class TInputDlg,, 0
+WinWaitActive ahk_class TInputDlg,, 0
 send ^a^c
 ClipWait 1
 sleep 100  ; making sure copy works
-IfInString, Clipboard, #Link: , {
+IfInString Clipboard, #Link: , {
 	ref_link_updated := RegExReplace(Clipboard, "(\n\K|^)#Link: .*", new_link)
 	clip(ref_link_updated)
 } else {
@@ -226,12 +210,20 @@ IfInString, Clipboard, #Link: , {
 	clip(new_link)
 }
 send !{enter}
-WinWaitActive, ahk_class TELWind,, 0
+WinWaitActive ahk_class TELWind,, 0
 if !ErrorLevel {
 	send ^t{esc}q
 	sleep 50
 	send ^{home}{esc}  ; put caret in the start of question component and unfocus every component
 }
+return
+
+o::  ; c*o*mpress images
+send ^{enter}
+WinWaitActive ahk_class TCommanderDlg,, 0
+send co{enter}  ; Compress images
+Vim.State.SetMode("Insert")
+back_to_normal = 1
 return
 ;;;;;;;;;;;;;;;;;
 ; FOR TASK WINDOW

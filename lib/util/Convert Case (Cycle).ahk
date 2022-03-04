@@ -12,7 +12,7 @@ cycleNumber := 1
 
 ConvertUpper()
 {
-	clipSave := Clipboard
+	clipSave := Clipboardall
 	Clipboard = ; Empty the clipboard so that ClipWait has something to detect
 	SendInput ^c ; Copies selected text
 	ClipWait
@@ -27,7 +27,7 @@ ConvertUpper()
 
 ConvertLower()
 {
-	clipSave := Clipboard
+	clipSave := Clipboardall
 	Clipboard = ; Empty the clipboard so that ClipWait has something to detect
 	SendInput ^c ; Copies selected text
 	ClipWait
@@ -42,7 +42,7 @@ ConvertLower()
 
 ConvertSentence()
 {
-	clipSave := Clipboard
+	clipSave := Clipboardall
 	Clipboard = ; Empty the clipboard so that ClipWait has something to detect
 	SendInput ^c ; Copies selected text
 	ClipWait
@@ -58,7 +58,7 @@ ConvertSentence()
 
 ConvertMixed()
 {
-	clipSave := Clipboard
+	clipSave := Clipboardall
 	Clipboard = ; Empty the clipboard so that ClipWait has something to detect
 	SendInput ^c ; Copies selected text
 	ClipWait
@@ -75,7 +75,7 @@ ConvertMixed()
 
 ; CTRL + ALT + Q: Wrap selected text in double quotes
 ^!q::
-	clipSave := Clipboard
+	clipSave := Clipboardall
 	Clipboard = ; Empty the clipboard so that ClipWait has something to detect
 	SendInput ^c ; Copies selected text
 	ClipWait

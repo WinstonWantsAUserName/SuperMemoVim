@@ -1,24 +1,25 @@
-﻿#if WinActive("ahk_group " . Vim.GroupName)
+﻿#if WinActive("ahk_group " . Vim.GroupName) && !WinActive("ahk_class TChecksDlg")
 ~^a::Vim.State.SetMode("Vim_VisualChar")
+
+#if WinActive("ahk_group " . Vim.GroupName) && Vim.State.StrIsInCurrentVimMode("Insert")
+!v::Vim.State.SetMode("Vim_VisualChar")
 ;;;;;;;;;;;;;;;;;;
 ; FROM NORMAL MODE
 ;;;;;;;;;;;;;;;;;;
 #if WinActive("ahk_group " . Vim.GroupName) && Vim.State.Mode == "Vim_Normal"
 v::
-if dialogueWindow() {
+if dialogueWindow()
 	return
-}
 Vim.State.SetMode("Vim_VisualChar")
 return
 
 +v::
 Vim.State.SetMode("Vim_VisualChar")
-ControlGetFocus, currentFocus, ahk_class TElWind
-if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {  ; editing html
+ControlGetFocus currentFocus, ahk_class TElWind
+if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1")  ; editing html
 	send ^{down}^+{up}{left}^+{down}  ; select entire paragraph
-} else {
-	send {home}+{end}  ; select entire line
-}
+else
+	send {end}+{home}  ; select entire line
 return
 
 !0::
@@ -44,10 +45,6 @@ return
 ; FOR ENTIRE SUPERMEMO
 ;;;;;;;;;;;;;;;;;;;;;;
 #if WinActive("ahk_group " . Vim.GroupName) && Vim.State.StrIsInCurrentVimMode("Visual")
-~^c::  ; copy
-Vim.State.SetMode("Vim_Normal")
-return
-
 ~^b::  ; bold
 ~^i::  ; italic
 ~^u::  ; underline
@@ -65,14 +62,19 @@ return
 
 f::  ; parse html (*f*ormat)
 ^+1::
-Vim.State.SetMode("Vim_Normal")
 send ^+1
+Vim.State.SetMode("Vim_Normal")
+return
+
+s::  ; OG: *s*ubstitue
+send {bs}
+Vim.State.SetMode("Insert")
 return
 
 x::  ; backspace
 bs::
-Vim.State.SetMode("Vim_Normal")
 send {bs}
+Vim.State.SetMode("Vim_Normal")
 return
 
 y::  ; *y*ank (copy without format)
@@ -84,40 +86,32 @@ Clipboard := Clipboard
 return
 
 +y::  ; yank
-Vim.State.SetMode("Vim_Normal")
 send ^c{right}
+Vim.State.SetMode("Vim_Normal")
 return
 
 +p::  ; paste
 ^v::
-Vim.State.SetMode("Vim_Normal")
 send ^v
+Vim.State.SetMode("Vim_Normal")
 return
 
 p::  ; paste without format
-Vim.State.SetMode("Vim_Normal")
 Clipboard := Clipboard
 send ^v
+Vim.State.SetMode("Vim_Normal")
 return
 
 +d::  ; cut
 ^x::
-Vim.State.SetMode("Vim_Normal")
 send ^x
+Vim.State.SetMode("Vim_Normal")
 return
 
 d::  ; cut without format
-Vim.State.SetMode("Vim_Normal")
 Clipboard := Clipboard
 send ^x
-return
-
-g::  ; select everything above
-if (A_PriorHotkey != "g" or A_TimeSincePriorHotkey > 400) {  ; Too much time between presses, so this isn't a double-press.
-    KeyWait g
-    return
-}
-send +^{home}
+Vim.State.SetMode("Vim_Normal")
 return
 
 u::  ; lowercase conversion
@@ -125,9 +119,12 @@ ConvertLower()
 Vim.State.SetNormal()
 return
 
-; +u: uppercase conversion  ; also for going up
++u::  ; uppercase conversion
+ConvertUpper()
+Vim.State.SetNormal()
+return
 
-s::  ; sentence case conversion
+n::  ; se*n*tence case conversion
 ConvertSentence()
 Vim.State.SetNormal()
 return
@@ -154,28 +151,45 @@ ConvertMixed()
 cycleNumber:= 1
 }
 Return
+
+o::  ; OG: move to other end of marked area; not perfect with line breaks
+selection_len := StrLen(StrReplace(clip(), "`r"))
+; selection_len := StrLen(StrReplace(clip(), "`r`n", "`n"))
+send +{right}
+selection_right_len := StrLen(StrReplace(clip(), "`r"))
+; selection_right_len := StrLen(StrReplace(clip(), "`r`n", "`n"))
+send +{left}
+if (selection_len < selection_right_len) {  ; moving point of selection is on the right
+	send {right}
+	; SendInput +{left %selection_len%}
+	SendInput % "{shift down}{left " selection_len "}{shift up}"
+} else {
+	send {left}
+	; SendInput +{right %selection_len%}
+	SendInput % "{shift down}{right " selection_len "}{shift up}"
+}
+return
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ; FOR ELEMENT WINDOW ONLY
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 #if WinActive("ahk_class TElWind") && Vim.State.StrIsInCurrentVimMode("Visual")
 !x:: ; default SuperMemo shortcut
-e::
-Vim.State.SetMode("Vim_Normal", 0, 0, 0)
+r::  ; ext*r*act
 send !x
+Vim.State.SetMode("Vim_Normal")
 return
 
 !z:: ; default SuperMemo shortcut
-c::
-Vim.State.SetMode("Vim_Normal", 0, 0, 0)
+c::  ; *c*loze
 send !z
+Vim.State.SetMode("Vim_Normal")
 return
 
-t::  ; highligh*t*
-Vim.State.SetMode("Vim_Normal")
-ControlGetFocus, currentFocus, ahk_class TElWind
-if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1") {
+m::  ; highlight: *m*ark
+ControlGetFocus currentFocus, ahk_class TElWind
+if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1")
 	send !{f12}rh
-}
+Vim.State.SetMode("Vim_Normal")
 return
 
 ; !d: page *d*own  ; also need to enter normal mode
@@ -184,4 +198,63 @@ return
 KeyWait alt
 MouseMove 40, 380
 send {Wheelup 2}
+return
+
+#if WinActive("ahk_class TElWind")
+*!+z::
+#if WinActive("ahk_class TElWind") && Vim.State.StrIsInCurrentVimMode("Visual")
+*!+z::
+*+c::  ; cloze hinter
+GetKeyState ctrl_state, ctrl
+InputBox userInput, Cloze hinter, Please enter your cloze hint.`nIf you enter "hint1/hint2"`, your cloze will be [hint1/hint2]`nIf you enter "hint1/hint2/"`, your cloze will be [...](hint1/hint2),, 256, 196
+if ErrorLevel
+	return
+send !z
+Vim.State.SetMode("Vim_Normal")
+if !userInput
+	return
+WinWaitActive ahk_class TMsgDialog,, 0
+if !ErrorLevel
+	return
+SMToolTip("Cloze hinting...", "p")
+sleep 1200  ; tried several detection method here, like detecting when the focus control changes or when title changes
+send !{left}  ; none of them seems to be stable enough
+sleep 300  ; so I had to resort to good old sleep
+send q
+sleep 50
+IfInString userInput, /, {
+	cloze := RegExReplace(userInput, "/$")  ; removing the last /
+	if (cloze = userInput)  ; no replacement
+		cloze = %cloze%]
+	else
+		cloze = ...](%cloze%)
+} else
+	cloze = ...](%userInput%)
+ControlGetFocus currentFocus, ahk_class TElWind
+if (currentFocus = "TMemo2" || currentFocus = "TMemo1") {  ; editing plain text
+	send ^a
+	clip(StrReplace(clip(), "[...]", cloze))
+} else {
+	send {f3}
+	WinWaitActive ahk_class TMyFindDlg,, 0
+	SendInput {raw}[...]
+	send {enter}
+	WinWaitNotActive ahk_class TMyFindDlg,, 0  ; faster than wait for element window to be active
+	; WinWaitActive ahk_class TELWind,, 0  ; if problematic, use this one
+	send ^{enter}
+	WinWaitActive ahk_class TCommanderDlg,, 0
+	if ErrorLevel
+		return
+	Send h{enter}q{left}{right}  ; put the caret after the [ of [...]
+	clip(cloze)
+	send {del 4}  ; delete ...]
+	if WinExist("ahk_class TMyFindDlg") {  ; clears search box window
+		WinActivate
+		WinWaitActive ahk_class TMyFindDlg,, 0
+		send {esc}
+	}
+}
+if (ctrl_state = "U")  ; only goes back to topic if ctrl is up
+	send !{right}  ; add a ctrl to keep editing the clozed item
+ToolTip
 return
