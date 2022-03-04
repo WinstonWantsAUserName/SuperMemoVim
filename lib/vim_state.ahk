@@ -133,7 +133,9 @@
   StatusCheck() {
     if WinActive("ahk_group " this.Vim.GroupName) {
 	  this.Vim.Icon.SetIcon(this.Mode, this.Vim.Conf["VimIconCheckInterval"]["val"])
-	  if this.Vim.State.g
+	  if this.Vim.State.g && this.Vim.State.n > 0
+		SMToolTip(this.Vim.State.n . "g",, -300)
+	  else if this.Vim.State.g
 		SMToolTip("g",, -300)
 	  else if this.Vim.State.n > 0
 	    SMToolTip(this.Vim.State.n,, -300)

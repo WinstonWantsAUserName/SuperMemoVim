@@ -13,16 +13,8 @@ if (Vim.State.Mode == "Vim_Normal")  ; ignore all this in visual mode
 		return
 	}
 	if Vim.State.n > 0 {
-		n_repeat -= 1
-		Vim.State.SetMode("", 0, n_repeat)
-		coord_x := 40 * A_ScreenDPI / 96
-		coord_y := 115 * A_ScreenDPI / 96
-		click %coord_x% %coord_y%
-		send {home}
-		if Vim.State.n > 0
-			Vim.Move.Repeat("j")  ; go down x lines from top of article
-		ToolTip
-		Vim.State.SetMode("", 0, 0)
+		Vim.State.SetMode("", 1, -1)
+		SMToolTip(n_repeat . "g", "p")
 		return
 	}
 Vim.State.SetMode("", 1)
@@ -33,6 +25,25 @@ return
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #if WinActive("ahk_group " . Vim.GroupName) && Vim.State.StrIsInCurrentVimMode("Vim_") && Vim.State.g
 g::
+if Vim.State.n > 0 {
+	n_repeat -= 1
+	Vim.State.SetMode("", 0, n_repeat)
+	ControlGetFocus currentFocus, ahk_class TElWind
+	if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1" || currentFocus = "TMemo2" || currentFocus = "TMemo1")  ; editing text
+		send ^{home}
+	else {
+		send ^t{esc}q
+		sleep 100
+		ControlGetFocus currentFocus, ahk_class TElWind
+		if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1" || currentFocus = "TMemo2" || currentFocus = "TMemo1")  ; editing text
+			send ^{home}
+	}
+	if Vim.State.n > 0
+		Vim.Move.Repeat("j")  ; go down x lines from top of article
+	ToolTip
+	Vim.State.SetMode("", 0, 0)
+	return
+}
 Vim.Move.Move("g")  ; OG: move to top
 ToolTip
 return
@@ -202,7 +213,7 @@ Vim.Move.Move("$")
 return
 
 +g::  ; OG: go to start of last line
-if WinActive("ahk_class TElWind") || WinActive("ahk_class TContents") || WinActive("ahk_class TBrowser") {
+if (WinActive("ahk_class TElWind") || WinActive("ahk_class TContents") || WinActive("ahk_class TBrowser")) && Vim.State.n = 0 {
 	ControlGetFocus currentFocus, ahk_class TElWind
 	if (currentFocus != "Internet Explorer_Server2" && currentFocus != "Internet Explorer_Server1" && currentFocus != "TMemo2" && currentFocus != "TMemo1") {  ; not editing text
 		send {end}
@@ -212,20 +223,15 @@ if WinActive("ahk_class TElWind") || WinActive("ahk_class TContents") || WinActi
 if Vim.State.n > 0 {
 	n_repeat -= 1
 	Vim.State.SetMode("", 0, n_repeat)
-	ControlGetFocus currentFocus, ahk_class TElWind
-	if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1" || currentFocus = "TMemo2" || currentFocus = "TMemo1")  ; editing text
-		send ^{home}
-	else {
-		send ^t{esc}q
-		sleep 100
-		ControlGetFocus currentFocus, ahk_class TElWind
-		if (currentFocus = "Internet Explorer_Server2" || currentFocus = "Internet Explorer_Server1" || currentFocus = "TMemo2" || currentFocus = "TMemo1")  ; editing text
-			send ^{home}
-	}
+	coord_x := 40 * A_ScreenDPI / 96
+	coord_y := 115 * A_ScreenDPI / 96
+	click %coord_x% %coord_y%
+	send {home}
 	if Vim.State.n > 0
 		Vim.Move.Repeat("j")  ; go down x lines from top of article
 	ToolTip
 	Vim.State.SetMode("", 0, 0)
+	return
 } else {
 	Vim.Move.Move("+g")
 	ControlGetFocus currentFocus, ahk_class TElWind

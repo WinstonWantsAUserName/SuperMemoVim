@@ -11,6 +11,7 @@ return
 shift::  ; shift: always go to insert mode
 ~AppsKey::  ; menu key
 ~RButton::  ; right click
+~^+a::  ; select all: differs from ^a (which enters visual), this one enters insert
 Vim.State.SetMode("Insert")
 return
 

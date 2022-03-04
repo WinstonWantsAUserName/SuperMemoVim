@@ -22,17 +22,15 @@ For text editing. Press `shift` in **all** modes to enter insert mode, and press
 
 ## Visual mode
 
-For selecting text and editing selected text. Press `v` in **normal** mode to enter visual mode. Press `alt+v` in **insert** mode to enter visual mode.
+For selecting text and editing selected text. Press `v` in **normal** mode to enter visual mode.
 
 ## Command mode
 
-For longer scripts. In **normal** mode, press `;` or `:` to enter command mode, press it again to return to normal mode. In **insert** mode, press `alt+;` to enter command mode.
+For longer scripts. In **normal** mode, press `;` or `:` to enter command mode, press it again to return to normal mode. In **insert** mode, press `ctrl+;` to enter command mode.
 
 # Keystrokes and shortcuts
 
-## Important
-
-Paragraph means a paragraph in html components; it means a line in plain texts and every other place.
+Paragraph means a paragraph in html components; it means a line in every other place.
 
 Typically, adding an `alt` to the hotkey relating to paragraph operations force it to operate on a line (e.g. in html components, `shift+d`: delete to end of paragraph; `alt+shift+d`: delete to end of line).
 
@@ -40,7 +38,7 @@ There are some limitations in html that makes adding line between paragraphs doe
 
 ## Navigation
 
-For both normal and visual mode. Enter a number beforehand (press `esc` to cancel) to repeat the action for x times.
+For both normal and visual mode. Pressing any of the `1-9` keys beforehand repeats the action for the corresponding times.
 
 ### Up/down
 
@@ -54,9 +52,11 @@ For both normal and visual mode. Enter a number beforehand (press `esc` to cance
 
 (`j` and `k`, while in element window and not focused on text, function as `pgdn` and `pgup`)
 
-`number->g`: go to xth line of current screen (e.g. press 4 followed by g goes to the 4th line on the screen)
+`shift+j`: down 5 times (works for content window and browser too)
 
-`number->shift+g`: go to xth line of current article
+`shift+k`: up 5 times
+
+`[1-9]->g`: go to xth line (e.g. press 4 followed by g goes to the 4th line)
 
 ### Left/right
 
@@ -68,9 +68,9 @@ For both normal and visual mode. Enter a number beforehand (press `esc` to cance
 
 `b`: go **b**ack a word (= `ctrl+left`)
 
-`e`: go to **e**nd of next word (= `ctrl+right` \*2 -> `left`)
+`shift+w`: go forward 5 words
 
-`g->e`: go to end of previous word (= `ctrl+left` -> `left`)
+`shift+b`: go back 5 words
 
 ### Previous/next block
 
@@ -84,13 +84,15 @@ For both normal and visual mode. Enter a number beforehand (press `esc` to cance
 
 `gg` (press `g` twice): **g**o to top (= `ctrl+home`)
 
-`shift+g`: go to start of last line (doesn't include references)
+`shift+g`: go to bottom (= `ctrl+end`)
 
 ## Normal mode
 
 ### Basic operation
 
-`x` : delete forward 1 character (= `del`), `shift+x` = `backspace`
+`x` : delete forward 1 character (= `del`)
+
+`shift+x` = `backspace`
 
 `shift+d`: **d**elete everything from caret to end of paragraph (`alt+shift+d` for end of line)
 
@@ -98,35 +100,15 @@ For both normal and visual mode. Enter a number beforehand (press `esc` to cance
 
 `shift+p`: **p**aste with format (= `ctrl+v`)
 
-`shift+y`: **y**ank (copy) current paragraph
-
-`shift+j`: **j**oin current paragraph with the one **below** with a space in between
-
-`shift+k`: join current paragraph with the one **above** with a space in between
-
-`g->shift+j`: **j**oin current paragraph with the one **below** without a space in between
-
-`g->shift+k`: join current paragraph with the one **above** without a space in between
-
-`g->u`: paragraph lowercase conversion (`g->alt+u` for line)
-
-`g->shift+u`: paragraph uppercase conversion (`g->alt+shift+u` for line)
-
-`g->s`: paragraph sentence case conversion (`g->alt+s` for line)
-
-`/`: better search in current field (`/` alone puts the caret on the left of search string (add a `right shift` to put it on the right); `ctrl+/` selects the search string and goes to visual mode; `right alt+/` to also cloze the searched string)
+`shift+y`: **y**ank (copy) current paragraph (`alt+shift+y` for current line)
 
 ### SuperMemo functions
 
-`f` (when not grading): focus to **e**lement window
+`e`: focus to **e**lement window
 
 `u`: page **u**p
 
 `d` (while not grading): page **d**own
-
-`alt+h/j/k/l`: scroll left/down/up/right
-
-(you can enter a number before to repeat the scrolling action x times)
 
 `r`: semi-**r**eload  (= `alt+home` and `alt+left`)
 
@@ -142,17 +124,11 @@ For both normal and visual mode. Enter a number beforehand (press `esc` to cance
 
 `b` (while not editing text): **b**rowser (= `ctrl+space`)
 
-`t` = `ctrl+t` (cycle through components)
-
-`\` = `ctrl+f3` (also works in visual mode)
-
-`s` (in Plan and tasklist window): switch Plan/tasklists
-
 ### Element navigation
 
-`alt+shift+j` (not editing html): previous sibling (= `alt+shift+pgdn`)
+`alt+shift+j`: previous sibling (= `alt+shift+pgdn`)
 
-`alt+shift+k` (not editing html): next sibling (= `alt+shift+pgup`)
+`alt+shift+k`: next sibling (= `alt+shift+pgup`)
 
 `shift+h`: go back (= `alt+left`)
 
@@ -211,27 +187,21 @@ For both normal and visual mode. Enter a number beforehand (press `esc` to cance
 
 ### SuperMemo functions
 
-`r`: ext**r**act (= `alt+x`)
+`e`: **e**xtract (= `alt+x`)
 
 `c`: **c**loze (= `alt+z`)
 
-`shift+c`, `alt+shift+z`: cloze hinter (add a `ctrl` to stay in clozed item)
-
 `.`: seleted text becomes `[...]`
 
-`m`: highlight (**m**ark)
+`t`: highligh**t**
 
 `f`: clear **f**ormat
-
-`\` = `ctrl+f3` (also works in normal mode)
 
 ### Basic operations
 
 `alt+d`: page **d**own
 
 `alt+u`: page **u**p
-
-`o`: move to other end of selection (not perfect with line breaks)
 
 `x` = `backspace`
 
@@ -259,13 +229,17 @@ For both normal and visual mode. Enter a number beforehand (press `esc` to cance
 
 ## Command mode
 
-`c`: add new concept
+`c`: change the default **c**oncept group
+
+`shift+c`: add new concept
 
 `b`: delete everything **b**efore cursor
 
 `a`: delete everything **a**fter cursor
 
 `f`: clean **f**ormat using f6 (keeping tables, clearing fonts and styles)
+
+`g`: change current element's concept **g**roup
 
 `l`: **l**ink concept
 
@@ -274,8 +248,6 @@ For both normal and visual mode. Enter a number beforehand (press `esc` to cance
 `i`: learn outstanding **i**tems only
 
 `r`: set **r**eference's link to what's on clipboard
-
-`o`: c**o**mpress images
 
 number pad:
 - in main windows: [priority script by Naess](https://youtu.be/OwV5HPKMrbg) (also works with shift+number, for laptop users)
@@ -290,12 +262,6 @@ ctrl+m is remapped to `ctrl+shift+alt+m`, and ctrl+shift+j is remapped to `ctrl+
 `ctrl+shift+f12` doesn't show notification.
 
 ### Additional functions
-
-Pressing left and right `alt` together triggers apps key (context menu key)(≣).
-
-`ctrl+alt+c`: change the default **c**oncept group
-
-`ctrl+alt+shift+g`: change current element's concept **g**roup
 
 `ctrl+alt+s`: go to **s**ource (works differently for element window / browser)
 
