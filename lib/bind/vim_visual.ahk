@@ -10,7 +10,7 @@
 v::
 if dialogueWindow()
 	return
-Vim.State.SetMode("Vim_VisualChar")
+Vim.State.SetMode("Vim_VisualFirst")
 return
 
 +v::
@@ -52,12 +52,16 @@ Vim.State.SetNormal()  ; this function has send {right} built in
 return
 
 ~^+i::Vim.State.SetMode("Vim_Normal")  ; ignore
-v::send {home}+{end}  ; select entire line
+
+v::
+send {home}+{end}  ; select entire line
+Vim.State.SetMode("Vim_VisualChar")  ; from VisualFirst to VisualChar
+return
 
 .::  ; selected text becomes [...]
-Vim.State.SetMode("Vim_Normal", 0, 0, 0)
 Clip("<span class=""Cloze"">[...]</span>")
 send +^{left 8}^+1
+Vim.State.SetMode("Vim_Normal")
 return
 
 f::  ; parse html (*f*ormat)
@@ -217,7 +221,7 @@ WinWaitActive ahk_class TMsgDialog,, 0
 if !ErrorLevel
 	return
 SMToolTip("Cloze hinting...", "p")
-sleep 1200  ; tried several detection method here, like detecting when the focus control changes or when title changes
+sleep 1700  ; tried several detection method here, like detecting when the focus control changes or when title changes
 send !{left}  ; none of them seems to be stable enough
 sleep 300  ; so I had to resort to good old sleep
 send q
@@ -236,6 +240,7 @@ if (currentFocus = "TMemo2" || currentFocus = "TMemo1") {  ; editing plain text
 	clip(StrReplace(clip(), "[...]", cloze))
 } else {
 	send {f3}
+	WinWaitNotActive ahk_class TELWind,, 0  ; double insurance to make sure the enter below does not trigger learn (which sometimes happens in slow computers)
 	WinWaitActive ahk_class TMyFindDlg,, 0
 	SendInput {raw}[...]
 	send {enter}

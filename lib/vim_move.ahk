@@ -11,7 +11,7 @@
 		  send {shift down}
 		}
 		; left/right
-		if (not this.Vim.State.StrIsInCurrentVimMode("Line")) {
+		if !this.Vim.State.StrIsInCurrentVimMode("Line") {
 		  ; For some cases, need '+' directly to continue to select
 		  ; especially for cases using shift as original keys
 		  ; For now, caret does not work even add + directly
@@ -30,25 +30,29 @@
 		  ; Words
 		  } else if (key == "w") {
 			if (shift == 1) {
-			  send +^{right}
+			  send ^+{right}
 			} else {
 			  send ^{right}
 			}
 		  } else if (key == "e") {
 			if (shift == 1) {
-			  send +^{right 2}+{left}
+			  if this.Vim.State.StrIsInCurrentVimMode("VisualFirst") {
+				send ^+{right}+{left}
+				this.Vim.State.SetMode("Vim_VisualChar")
+			  } else
+				send ^+{right 2}+{left}
 			} else {
 			  send ^{right 2}{left}
 			}
 		  } else if (key == "ge") {
 			if (shift == 1) {
-			  send +^{left}+{left}
+			  send ^+{left}+{left}
 			} else {
 			  send ^{left}{left}
 			}
 		  } else if (key == "b") {
 			if (shift == 1) {
-			  send +^{left}
+			  send ^+{left}
 			} else {
 			  send ^{left}
 			}
@@ -64,7 +68,7 @@
 			; MsgBox !  ; mystery.
 		} else if (key == "+g") {
 			if (shift == 1) {
-			  send +^{end}+{home}
+			  send ^+{end}+{home}
 			} else {
 			  send ^{end}{home}
 			}
@@ -88,7 +92,7 @@
 			}
 		} else if (key == "}") {  ; next paragraph
 			if (shift == 1) {
-			  send +^{down}
+			  send ^+{down}
 			} else {
 			  send ^{down}
 			}

@@ -290,8 +290,9 @@ else
 if !userInput  ; still empty
 	return
 send {esc}{f3}  ; esc to exit field, so it can return to the same field later
+; WinWaitNotActive ahk_class TELWind,, 0  ; double insurance to make sure the enter below does not trigger learn (which sometimes happens in slow computers)
 WinWaitActive ahk_class TMyFindDlg,, 0
-clip(userInput)
+clip(userInput)  ; clip() has some delay in itself so no need for double insurance
 send {enter}
 ; cannot wait both for element window and message dialogue to be active, nor wait for find window to not be active
 ; because as soon as you press enter, the find window is gone and element window is active
