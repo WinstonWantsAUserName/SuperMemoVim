@@ -90,7 +90,7 @@ For both normal and visual mode. Enter a number beforehand (press `esc` to cance
 
 ### Basic operation
 
-`x` : delete forward 1 character (= `del`), `shift+x` = `backspace`
+`x` : delete forward 1 character (= `del`), `shift+x` = `backspace` (`backspace` is remapped to `left`)
 
 `shift+d`: **d**elete everything from caret to end of paragraph (`alt+shift+d` for end of line)
 
@@ -112,7 +112,7 @@ For both normal and visual mode. Enter a number beforehand (press `esc` to cance
 
 `g->shift+u`: paragraph uppercase conversion (`g->alt+shift+u` for line)
 
-`g->s`: paragraph sentence case conversion (`g->alt+s` for line)
+`g->n`: paragraph sentence case conversion (`g->alt+n` for line)
 
 `/`: better search in current field (`/` alone puts the caret on the left of search string (add a `right shift` to put it on the right); `ctrl+/` selects the search string and goes to visual mode; `right alt+/` to also cloze the searched string)
 
@@ -227,13 +227,15 @@ For both normal and visual mode. Enter a number beforehand (press `esc` to cance
 
 ### Basic operations
 
+`o`: move to other end of selection (not perfect with line breaks)
+
+`s`: delete text and enter insert mode (**s**ubstitute)
+
+`x` = `backspace`
+
 `alt+d`: page **d**own
 
 `alt+u`: page **u**p
-
-`o`: move to other end of selection (not perfect with line breaks)
-
-`x` = `backspace`
 
 `y`: copy without format (**y**ank)
 
@@ -253,7 +255,7 @@ For both normal and visual mode. Enter a number beforehand (press `esc` to cance
 
 `shift+u`: convert to uppercase 
 
-`s`: convert to sentence case
+`n`: convert to sentence case
 
 `` ` ``: cycle through cases
 
